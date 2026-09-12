@@ -10,10 +10,10 @@ export default function Home() {
   return (
     <div>
       <section className="relative isolate overflow-hidden bg-ink text-white">
-        <img src="/img/_hero.jpg" alt="" className="absolute inset-0 img-cover opacity-45" />
+        <img src="/img/_hero.jpg" srcSet="/img/_hero-800.jpg 800w, /img/_hero.jpg 1600w" sizes="100vw" alt="" fetchPriority="high" decoding="async" className="absolute inset-0 img-cover opacity-45" />
         <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-ink/20" />
         <div className="container relative py-24 sm:py-32 max-w-3xl">
-          <div className="text-[12px] uppercase tracking-[0.18em] font-bold text-accent mb-4">Guías de compra independientes</div>
+          <div className="text-[12px] uppercase tracking-[0.18em] font-bold text-orange-300 mb-4">Guías de compra independientes</div>
           <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.05]">
             Compra bien a la primera. <span className="text-accent">Sin listas infinitas.</span>
           </h1>
@@ -22,7 +22,7 @@ export default function Home() {
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link href={`/guias/${first.slug}/`} className="bg-accent hover:bg-accent-dark text-white font-bold rounded-xl px-5 py-3">Última guía: {CATEGORIES[first.category].name}</Link>
-            <Link href="#guias" className="bg-white/10 hover:bg-white/15 text-white font-bold rounded-xl px-5 py-3">Ver todas las guías</Link>
+            <Link href="#guias" className="bg-white/10 hover:bg-white/15 text-white font-bold rounded-xl px-5 py-3">Todas las guías de compra</Link>
           </div>
         </div>
       </section>
@@ -70,7 +70,7 @@ export default function Home() {
             ["Al día", "Revisamos precios, novedades y disponibilidad y marcamos la fecha de la última actualización en cada guía."],
           ].map(([t, d]) => (
             <div key={t}>
-              <div className="text-accent font-extrabold text-xl mb-2">{t}</div>
+              <div className="text-accent-dark font-extrabold text-xl mb-2">{t}</div>
               <p className="text-muted leading-relaxed">{d}</p>
             </div>
           ))}

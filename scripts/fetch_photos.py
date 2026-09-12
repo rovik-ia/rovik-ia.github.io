@@ -53,6 +53,7 @@ for slug, q in targets.items():
     if h > th: im = im.crop((0, (h - th)//2, w, (h - th)//2 + th))
     out = os.path.join(ROOT, "public", "img", "guias" if slug != "_hero" else "", f"{slug}.jpg").replace("//", "/")
     im.save(out, "JPEG", quality=80, optimize=True, progressive=True)
+    small = im.copy(); small.thumbnail((800, 800)); small.save(out[:-4] + "-800.jpg", "JPEG", quality=76, optimize=True, progressive=True)
     credits[slug] = {"photographer": ph["photographer"], "url": ph["url"], "photographer_url": ph["photographer_url"]}
     print(f"{slug}: {os.path.getsize(out)//1024} KB · {ph['photographer']}")
 

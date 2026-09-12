@@ -46,15 +46,15 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
       <header className="relative isolate bg-ink text-white overflow-hidden">
-        <img src={`/img/guias/${a.slug}.jpg`} alt="" className="absolute inset-0 img-cover opacity-50" />
+        <img src={`/img/guias/${a.slug}.jpg`} srcSet={`/img/guias/${a.slug}-800.jpg 800w, /img/guias/${a.slug}.jpg 1600w`} sizes="100vw" alt="" fetchPriority="high" decoding="async" className="absolute inset-0 img-cover opacity-50" />
         <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/60 to-ink/10" />
         <div className="container relative py-20 sm:py-28 max-w-4xl">
-          <nav className="text-sm text-white/70 mb-4">
+          <nav className="text-sm text-white/80 mb-4">
             <Link href="/" className="hover:text-white">Inicio</Link> › <Link href={`/categorias/${a.category}/`} className="hover:text-white">{CATEGORIES[a.category].name}</Link>
           </nav>
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-[1.08]">{a.title}</h1>
           <p className="text-white/80 mt-5 text-lg leading-relaxed max-w-2xl">{a.description}</p>
-          <div className="text-sm text-white/60 mt-5">Actualizado el {formatDate(a.updated ?? a.date)} · {a.readingMinutes} min de lectura{credit ? <> · Foto: <a href={credit.url} className="underline" rel="noopener" target="_blank">{credit.photographer}</a></> : null}</div>
+          <div className="text-sm text-white/80 mt-5">Actualizado el {formatDate(a.updated ?? a.date)} · {a.readingMinutes} min de lectura{credit ? <> · Foto: <a href={credit.url} className="underline" rel="noopener" target="_blank">{credit.photographer}</a></> : null}</div>
         </div>
       </header>
 
@@ -67,7 +67,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
             <ul className="space-y-2 text-[15px]">
               {a.quickPick.map((q, i) => (
                 <li key={q.label} className="flex gap-3">
-                  <span className="text-accent font-bold min-w-[11rem]">{q.label}</span>
+                  <span className="text-accent-dark font-bold min-w-[11rem]">{q.label}</span>
                   <a href={`#producto-${i + 1}`} className="underline decoration-line underline-offset-4 hover:decoration-accent">{q.product}</a>
                 </li>
               ))}

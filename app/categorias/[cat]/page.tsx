@@ -23,7 +23,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ cat: 
   return (
     <div>
       <header className="relative isolate bg-ink text-white overflow-hidden">
-        {cover && <img src={`/img/guias/${cover.slug}.jpg`} alt="" className="absolute inset-0 img-cover opacity-40" />}
+        {cover && <img src={`/img/guias/${cover.slug}.jpg`} srcSet={`/img/guias/${cover.slug}-800.jpg 800w, /img/guias/${cover.slug}.jpg 1600w`} sizes="100vw" alt="" fetchPriority="high" decoding="async" className="absolute inset-0 img-cover opacity-40" />}
         <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-ink/20" />
         <div className="container relative py-16 sm:py-24">
           <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">{c.name}</h1>

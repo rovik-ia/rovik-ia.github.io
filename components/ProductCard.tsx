@@ -19,7 +19,7 @@ export default function ProductCard({ p, index, slug }: { p: Product; index: num
         <div className="p-6 sm:p-7">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              {p.badge && <span className="inline-block text-[11px] font-bold uppercase tracking-wider bg-accent-soft text-accent rounded-full px-2.5 py-1 mb-2">{p.badge}</span>}
+              {p.badge && <span className="inline-block text-[11px] font-bold uppercase tracking-wider bg-accent-soft text-accent-dark rounded-full px-2.5 py-1 mb-2">{p.badge}</span>}
               <h3 className="text-2xl font-extrabold leading-snug tracking-tight">{p.name}</h3>
             </div>
             <div className="text-sm text-muted whitespace-nowrap">Precio orientativo <strong className="text-fg text-base">{p.priceRange}</strong></div>
