@@ -3,7 +3,7 @@ import { SITE } from "@/lib/site";
 export const metadata: Metadata = { title: "Aviso de afiliación" };
 export default function Page() {
   return (
-    <article className="prose max-w-3xl mx-auto">
+    <article className="prose max-w-3xl mx-auto container pt-10">
       <h1 className="text-3xl font-extrabold tracking-tight mb-6">Aviso de afiliación</h1>
       <p>En calidad de Afiliado de Amazon, obtengo ingresos por las compras adscritas que cumplen los requisitos aplicables.</p>
       <p>{SITE.name} participa en el Programa de Afiliados de Amazon EU, un programa de publicidad para afiliados diseñado para ofrecer a sitios web un modo de obtener comisiones por publicidad, publicitando e incluyendo enlaces a Amazon.es.</p>

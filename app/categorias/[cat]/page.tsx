@@ -19,12 +19,21 @@ export default async function CategoryPage({ params }: { params: Promise<{ cat: 
   const c = CATEGORIES[cat];
   if (!c) notFound();
   const list = articles.filter((a) => a.category === cat);
+  const cover = list[0];
   return (
     <div>
-      <h1 className="text-3xl font-extrabold tracking-tight">{c.name}</h1>
-      <p className="text-muted mt-2">{c.description}</p>
-      <div className="grid sm:grid-cols-2 gap-4 mt-8">{list.map((a) => <ArticleCard key={a.slug} a={a} />)}</div>
-      {list.length === 0 && <p className="text-muted mt-8">Todavía no hay guías en esta categoría.</p>}
+      <header className="relative isolate bg-ink text-white overflow-hidden">
+        {cover && <img src={`/img/guias/${cover.slug}.jpg`} alt="" className="absolute inset-0 img-cover opacity-40" />}
+        <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-ink/20" />
+        <div className="container relative py-16 sm:py-24">
+          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">{c.name}</h1>
+          <p className="text-white/75 mt-3 text-lg">{c.description}</p>
+        </div>
+      </header>
+      <div className="container pt-10">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">{list.map((a) => <ArticleCard key={a.slug} a={a} />)}</div>
+        {list.length === 0 && <p className="text-muted">Todavía no hay guías en esta categoría.</p>}
+      </div>
     </div>
   );
 }

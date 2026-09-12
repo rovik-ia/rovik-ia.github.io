@@ -3,7 +3,7 @@ import { SITE } from "@/lib/site";
 export const metadata: Metadata = { title: "Aviso legal" };
 export default function Page() {
   return (
-    <article className="prose max-w-3xl mx-auto">
+    <article className="prose max-w-3xl mx-auto container pt-10">
       <h1 className="text-3xl font-extrabold tracking-tight mb-6">Aviso legal</h1>
       <p>En cumplimiento de la Ley 34/2002, de Servicios de la Sociedad de la Información y de Comercio Electrónico (LSSI-CE), se informa de que este sitio web es un proyecto editorial de carácter informativo. Titular: el responsable del sitio, con dirección de contacto {SITE.email}.</p>
       <h2>Objeto</h2>

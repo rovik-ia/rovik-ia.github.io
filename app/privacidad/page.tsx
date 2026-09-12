@@ -3,7 +3,7 @@ import { SITE } from "@/lib/site";
 export const metadata: Metadata = { title: "Política de privacidad" };
 export default function Page() {
   return (
-    <article className="prose max-w-3xl mx-auto">
+    <article className="prose max-w-3xl mx-auto container pt-10">
       <h1 className="text-3xl font-extrabold tracking-tight mb-6">Política de privacidad</h1>
       <p>Esta política describe cómo tratamos los datos personales conforme al Reglamento (UE) 2016/679 (RGPD) y a la Ley Orgánica 3/2018 (LOPDGDD).</p>
       <h2>Responsable</h2>

@@ -1,13 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #fbfaf7;
-  --fg: #16181d;
-  --muted: #5f6672;
-  --accent: #c2410c;
-  --accent-soft: #fff1e8;
-  --line: #e6e2da;
+  --bg: #f7f5f0;
+  --fg: #14161a;
+  --muted: #5d6470;
+  --accent: #d9571a;
+  --accent-dark: #b4450f;
+  --accent-soft: #fdeee4;
+  --line: #e4dfd6;
   --card: #ffffff;
+  --ink: #0f1115;
 }
 
 @theme inline {
@@ -15,19 +17,21 @@
   --color-fg: var(--fg);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
+  --color-accent-dark: var(--accent-dark);
   --color-accent-soft: var(--accent-soft);
   --color-line: var(--line);
   --color-card: var(--card);
+  --color-ink: var(--ink);
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
-html { color-scheme: light; }
-body {
-  background: var(--bg);
-  color: var(--fg);
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-}
-.prose p { margin: 0 0 1rem; line-height: 1.7; }
-.prose h2 { font-size: 1.5rem; font-weight: 700; margin: 2.25rem 0 0.75rem; letter-spacing: -0.01em; }
-.prose h3 { font-size: 1.15rem; font-weight: 700; margin: 1.5rem 0 0.5rem; }
-.prose ul { list-style: disc; padding-left: 1.4rem; margin: 0 0 1rem; line-height: 1.7; }
-.prose li { margin: 0.25rem 0; }
+html { color-scheme: light; scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif; }
+.container { width: 100%; max-width: 72rem; margin: 0 auto; padding-left: 1.25rem; padding-right: 1.25rem; }
+.prose p { margin: 0 0 1.1rem; line-height: 1.75; font-size: 1.05rem; }
+.prose h2 { font-size: 1.65rem; font-weight: 800; margin: 2.5rem 0 0.9rem; letter-spacing: -0.02em; }
+.prose h3 { font-size: 1.2rem; font-weight: 700; margin: 1.6rem 0 0.5rem; }
+.prose ul { list-style: disc; padding-left: 1.4rem; margin: 0 0 1.1rem; line-height: 1.75; font-size: 1.05rem; }
+.prose li { margin: 0.3rem 0; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 1.25rem; box-shadow: 0 1px 2px rgba(20,22,26,.04), 0 8px 24px -12px rgba(20,22,26,.12); }
+.img-cover { width: 100%; height: 100%; object-fit: cover; display: block; }
