@@ -42,3 +42,4 @@ next-env.d.ts
 
 # vídeos generados (pesados): se entregan fuera del repo
 marketing/videos/*.mp4
+scripts/__pycache__/
