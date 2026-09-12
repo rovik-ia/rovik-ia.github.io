@@ -2,11 +2,15 @@
 
 Todo lo de esta carpeta se genera desde las guías (`npx tsx scripts/export-articles.ts` → `python3 scripts/make_campaigns.py` → `python3 scripts/make_videos.py`).
 
+## 0. Fotografías de la web (coste 0 €)
+
+`scripts/fetch_photos.py` descarga una foto de Pexels por guía a `public/img/guias/<slug>.jpg` y guarda los créditos en `lib/photoCredits.json`. En el despliegue (GitHub Actions) se ejecuta con `--missing` usando el secreto `PEXELS_API_KEY`, así las guías nuevas de la rutina diaria salen con foto. Cada guía nueva debe llevar `photoQuery` (búsqueda en inglés).
+
 ## 1. Vídeos para redes (coste 0 €)
 
-`marketing/videos/<slug>.mp4` (vertical 1080x1920, 40-60 s, voz en off en español) y `<slug>.txt` con el texto de la publicación y hashtags.
+`marketing/videos/<slug>.mp4` (vertical 1080x1920, 45-60 s, ~10 MB) y `<slug>.txt` con el texto de la publicación, hashtags y créditos de los clips. Cada vídeo combina B-roll de Pexels, tarjetas de producto, subtítulos sincronizados frase a frase, barra de progreso y voz "Mónica (Mejorada)" de macOS. Generar: `~/venv/bin/python scripts/make_videos.py [slug]` (necesita `PEXELS_API_KEY` en `.env.local`).
 Sube cada vídeo a TikTok, Instagram Reels y YouTube Shorts con el texto del `.txt`. Pon el enlace de la web en la bio de cada perfil.
-Los vídeos no usan imágenes de Amazon ni música con derechos: solo texto, marca y voz.
+Los vídeos no usan imágenes de Amazon ni música con derechos. La licencia de Pexels permite el uso comercial; los créditos van en el texto de cada publicación.
 
 ## 2. Google Ads (requiere inversión)
 
