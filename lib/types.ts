@@ -20,6 +20,7 @@ export type Article = {
   date: string; // YYYY-MM-DD
   updated?: string;
   readingMinutes: number;
+  photoQuery?: string; // búsqueda en inglés para la foto de cabecera (Pexels)
   intro: string[];
   quickPick: { label: string; product: string }[];
   criteria: { title: string; text: string }[];

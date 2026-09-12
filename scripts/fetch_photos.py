@@ -24,8 +24,19 @@ QUERIES = {
   "mejores-cepillos-de-dientes-electricos": "electric toothbrush bathroom",
   "mejores-sillas-de-escritorio-ergonomicas": "ergonomic office chair home office",
 }
-credits = {}
-for slug, q in QUERIES.items():
+import sys
+credits_path = os.path.join(ROOT, "lib", "photoCredits.json")
+credits = json.load(open(credits_path)) if os.path.exists(credits_path) else {}
+GENERIC = {"hogar": "modern home interior", "cocina": "modern kitchen", "bienestar": "healthy lifestyle wellness", "tecnologia": "modern technology gadgets"}
+targets = dict(QUERIES)
+arts_path = os.path.join(ROOT, "marketing", "data", "articles.json")
+if os.path.exists(arts_path):
+    for a in json.load(open(arts_path)):
+        targets.setdefault(a["slug"], a.get("photoQuery") or GENERIC.get(a["category"], "modern home"))
+only_missing = "--missing" in sys.argv
+for slug, q in targets.items():
+    dest = os.path.join(ROOT, "public", "img", "guias" if slug != "_hero" else "", f"{slug}.jpg").replace("//", "/")
+    if only_missing and os.path.exists(dest): continue
     url = "https://api.pexels.com/v1/search?" + urllib.parse.urlencode({"query": q, "orientation": "landscape", "size": "large", "per_page": 5})
     data = json.load(urllib.request.urlopen(urllib.request.Request(url, headers={"Authorization": KEY, "User-Agent": UA}), timeout=30))
     photos = data.get("photos", [])
@@ -41,4 +52,5 @@ for slug, q in QUERIES.items():
     im.save(out, "JPEG", quality=80, optimize=True, progressive=True)
     credits[slug] = {"photographer": ph["photographer"], "url": ph["url"], "photographer_url": ph["photographer_url"]}
     print(f"{slug}: {os.path.getsize(out)//1024} KB · {ph['photographer']}")
-json.dump(credits, open(os.path.join(ROOT, "lib", "photoCredits.json"), "w"), ensure_ascii=False, indent=2)
+json.dump(credits, open(credits_path, "w"), ensure_ascii=False, indent=2)
+print("hecho")

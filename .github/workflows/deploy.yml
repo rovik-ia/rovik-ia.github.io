@@ -18,6 +18,15 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 22, cache: npm }
       - run: npm ci
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Fotos de cabecera para guías nuevas (Pexels)
+        run: |
+          pip install -q pillow certifi
+          npx tsx scripts/export-articles.ts
+          python3 scripts/fetch_photos.py --missing
+        env:
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
       - run: npm run build
         env:
           NEXT_PUBLIC_AMAZON_TAG: ${{ vars.AMAZON_TAG }}
