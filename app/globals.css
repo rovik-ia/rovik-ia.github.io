@@ -6,6 +6,7 @@
   --muted: #555c68;
   --accent: #d9571a;
   --accent-dark: #b4450f;
+  --accent-deep: #8f360b;
   --accent-soft: #fdeee4;
   --line: #e4dfd6;
   --card: #ffffff;
@@ -18,6 +19,7 @@
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-accent-dark: var(--accent-dark);
+  --color-accent-deep: var(--accent-deep);
   --color-accent-soft: var(--accent-soft);
   --color-line: var(--line);
   --color-card: var(--card);

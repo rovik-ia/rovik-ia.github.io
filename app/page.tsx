@@ -21,7 +21,7 @@ export default function Home() {
             Analizamos los productos más buscados en España y te decimos qué mirar, qué modelo encaja con tu presupuesto y para quién es cada uno.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link href={`/guias/${first.slug}/`} className="bg-accent hover:bg-accent-dark text-white font-bold rounded-xl px-5 py-3">Última guía: {CATEGORIES[first.category].name}</Link>
+            <Link href={`/guias/${first.slug}/`} className="bg-accent-dark hover:bg-accent-deep text-white font-bold rounded-xl px-5 py-3">Última guía: {CATEGORIES[first.category].name}</Link>
             <Link href="#guias" className="bg-white/10 hover:bg-white/15 text-white font-bold rounded-xl px-5 py-3">Todas las guías de compra</Link>
           </div>
         </div>

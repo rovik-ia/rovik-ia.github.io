@@ -36,7 +36,7 @@ export default function ProductCard({ p, index, slug }: { p: Product; index: num
             </div>
           </div>
           <p className="text-sm mt-4"><span className="font-bold">Ideal para:</span> {p.idealFor}</p>
-          <a href={href} target="_blank" rel="nofollow sponsored noopener" className="inline-flex items-center gap-2 mt-5 bg-accent hover:bg-accent-dark text-white font-bold rounded-xl px-5 py-3 transition-colors">
+          <a href={href} target="_blank" rel="nofollow sponsored noopener" className="inline-flex items-center gap-2 mt-5 bg-accent-dark hover:bg-accent-deep text-white font-bold rounded-xl px-5 py-3 transition-colors">
             Ver precio y fotos oficiales en Amazon.es <span aria-hidden>→</span>
           </a>
         </div>
