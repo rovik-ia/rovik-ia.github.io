@@ -1,0 +1,517 @@
+{
+  "campaign": {
+    "name": "Tendencia Top · Tráfico guías",
+    "objective": "OUTCOME_TRAFFIC",
+    "status": "PAUSED",
+    "buying_type": "AUCTION",
+    "special_ad_categories": []
+  },
+  "adsets": [
+    {
+      "name": "Sillas de escritorio ergonómicas",
+      "daily_budget_eur": 3.0,
+      "status": "PAUSED",
+      "optimization_goal": "LANDING_PAGE_VIEWS",
+      "billing_event": "IMPRESSIONS",
+      "targeting": {
+        "geo_locations": {
+          "countries": [
+            "ES"
+          ]
+        },
+        "age_min": 25,
+        "age_max": 64,
+        "publisher_platforms": [
+          "facebook",
+          "instagram"
+        ],
+        "instagram_positions": [
+          "stream",
+          "reels",
+          "story"
+        ],
+        "facebook_positions": [
+          "feed",
+          "video_feeds",
+          "story",
+          "facebook_reels"
+        ],
+        "interests_hint": [
+          "sillas de escritorio ergonómicas",
+          "hogar",
+          "compras online"
+        ]
+      },
+      "ad": {
+        "name": "Las mejores sillas de escritorio ergonómicas de 2026 para teletrabajo y estudio",
+        "format": "video",
+        "video_file": "marketing/videos/mejores-sillas-de-escritorio-ergonomicas.mp4",
+        "primary_text": "Guía para elegir silla de oficina ergonómica según horas de uso y presupuesto, con modelos de Sihoo, Hbada e IntimaTe y qué…",
+        "headline": "Mejores sillas de escritorio ergonómica…",
+        "description": "Guía de compra independiente",
+        "call_to_action": "LEARN_MORE",
+        "link": "https://rovik-ia.github.io/guias/mejores-sillas-de-escritorio-ergonomicas/?utm_source=meta&utm_medium=paid&utm_campaign=mejores-sillas-de-escritorio-ergonomicas"
+      }
+    },
+    {
+      "name": "Calefactores de bajo consumo: cuál elegir",
+      "daily_budget_eur": 3.0,
+      "status": "PAUSED",
+      "optimization_goal": "LANDING_PAGE_VIEWS",
+      "billing_event": "IMPRESSIONS",
+      "targeting": {
+        "geo_locations": {
+          "countries": [
+            "ES"
+          ]
+        },
+        "age_min": 25,
+        "age_max": 64,
+        "publisher_platforms": [
+          "facebook",
+          "instagram"
+        ],
+        "instagram_positions": [
+          "stream",
+          "reels",
+          "story"
+        ],
+        "facebook_positions": [
+          "feed",
+          "video_feeds",
+          "story",
+          "facebook_reels"
+        ],
+        "interests_hint": [
+          "calefactores de bajo consumo: cuál elegir",
+          "hogar",
+          "compras online"
+        ]
+      },
+      "ad": {
+        "name": "Calefactores de bajo consumo: cuál elegir para este otoño sin disparar la factu…",
+        "format": "video",
+        "video_file": "marketing/videos/mejores-calefactores-bajo-consumo.mp4",
+        "primary_text": "Cerámico, radiador de aceite o panel: explicamos qué tipo de calefactor consume menos según la habitación y qué modelos comp…",
+        "headline": "Mejores calefactores de bajo consumo: c…",
+        "description": "Guía de compra independiente",
+        "call_to_action": "LEARN_MORE",
+        "link": "https://rovik-ia.github.io/guias/mejores-calefactores-bajo-consumo/?utm_source=meta&utm_medium=paid&utm_campaign=mejores-calefactores-bajo-consumo"
+      }
+    },
+    {
+      "name": "Pistolas de masaje",
+      "daily_budget_eur": 3.0,
+      "status": "PAUSED",
+      "optimization_goal": "LANDING_PAGE_VIEWS",
+      "billing_event": "IMPRESSIONS",
+      "targeting": {
+        "geo_locations": {
+          "countries": [
+            "ES"
+          ]
+        },
+        "age_min": 25,
+        "age_max": 64,
+        "publisher_platforms": [
+          "facebook",
+          "instagram"
+        ],
+        "instagram_positions": [
+          "stream",
+          "reels",
+          "story"
+        ],
+        "facebook_positions": [
+          "feed",
+          "video_feeds",
+          "story",
+          "facebook_reels"
+        ],
+        "interests_hint": [
+          "pistolas de masaje",
+          "bienestar",
+          "compras online"
+        ]
+      },
+      "ad": {
+        "name": "Las mejores pistolas de masaje de 2026: cuál comprar según cómo entrenas",
+        "format": "video",
+        "video_file": "marketing/videos/mejores-pistolas-de-masaje.mp4",
+        "primary_text": "Comparamos las pistolas de masaje muscular más vendidas en España por potencia real, ruido, autonomía y precio, y te decimos…",
+        "headline": "Mejores pistolas de masaje 2026",
+        "description": "Guía de compra independiente",
+        "call_to_action": "LEARN_MORE",
+        "link": "https://rovik-ia.github.io/guias/mejores-pistolas-de-masaje/?utm_source=meta&utm_medium=paid&utm_campaign=mejores-pistolas-de-masaje"
+      }
+    },
+    {
+      "name": "Freidoras de aire",
+      "daily_budget_eur": 3.0,
+      "status": "PAUSED",
+      "optimization_goal": "LANDING_PAGE_VIEWS",
+      "billing_event": "IMPRESSIONS",
+      "targeting": {
+        "geo_locations": {
+          "countries": [
+            "ES"
+          ]
+        },
+        "age_min": 25,
+        "age_max": 64,
+        "publisher_platforms": [
+          "facebook",
+          "instagram"
+        ],
+        "instagram_positions": [
+          "stream",
+          "reels",
+          "story"
+        ],
+        "facebook_positions": [
+          "feed",
+          "video_feeds",
+          "story",
+          "facebook_reels"
+        ],
+        "interests_hint": [
+          "freidoras de aire",
+          "cocina",
+          "compras online"
+        ]
+      },
+      "ad": {
+        "name": "Las mejores freidoras de aire de 2026 por tamaño de familia y presupuesto",
+        "format": "video",
+        "video_file": "marketing/videos/mejores-freidoras-de-aire.mp4",
+        "primary_text": "Guía práctica para elegir freidora de aire: qué capacidad necesitas, cuánto consume de verdad y qué modelos de Cosori, Cecot…",
+        "headline": "Mejores freidoras de aire 2026",
+        "description": "Guía de compra independiente",
+        "call_to_action": "LEARN_MORE",
+        "link": "https://rovik-ia.github.io/guias/mejores-freidoras-de-aire/?utm_source=meta&utm_medium=paid&utm_campaign=mejores-freidoras-de-aire"
+      }
+    },
+    {
+      "name": "Robots aspiradores",
+      "daily_budget_eur": 3.0,
+      "status": "PAUSED",
+      "optimization_goal": "LANDING_PAGE_VIEWS",
+      "billing_event": "IMPRESSIONS",
+      "targeting": {
+        "geo_locations": {
+          "countries": [
+            "ES"
+          ]
+        },
+        "age_min": 25,
+        "age_max": 64,
+        "publisher_platforms": [
+          "facebook",
+          "instagram"
+        ],
+        "instagram_positions": [
+          "stream",
+          "reels",
+          "story"
+        ],
+        "facebook_positions": [
+          "feed",
+          "video_feeds",
+          "story",
+          "facebook_reels"
+        ],
+        "interests_hint": [
+          "robots aspiradores",
+          "hogar",
+          "compras online"
+        ]
+      },
+      "ad": {
+        "name": "Los mejores robots aspiradores calidad-precio de 2026: guía sin humo",
+        "format": "video",
+        "video_file": "marketing/videos/mejores-robots-aspiradores-calidad-precio.mp4",
+        "primary_text": "Qué robot aspirador comprar en 2026 según tu casa: navegación láser, potencia real, fregado y bases de autovaciado explicado…",
+        "headline": "Mejores robots aspiradores 2026",
+        "description": "Guía de compra independiente",
+        "call_to_action": "LEARN_MORE",
+        "link": "https://rovik-ia.github.io/guias/mejores-robots-aspiradores-calidad-precio/?utm_source=meta&utm_medium=paid&utm_campaign=mejores-robots-aspiradores-calidad-precio"
+      }
+    },
+    {
+      "name": "Smartwatch",
+      "daily_budget_eur": 3.0,
+      "status": "PAUSED",
+      "optimization_goal": "LANDING_PAGE_VIEWS",
+      "billing_event": "IMPRESSIONS",
+      "targeting": {
+        "geo_locations": {
+          "countries": [
+            "ES"
+          ]
+        },
+        "age_min": 25,
+        "age_max": 64,
+        "publisher_platforms": [
+          "facebook",
+          "instagram"
+        ],
+        "instagram_positions": [
+          "stream",
+          "reels",
+          "story"
+        ],
+        "facebook_positions": [
+          "feed",
+          "video_feeds",
+          "story",
+          "facebook_reels"
+        ],
+        "interests_hint": [
+          "smartwatch",
+          "tecnologia",
+          "compras online"
+        ]
+      },
+      "ad": {
+        "name": "Los mejores smartwatch calidad-precio de 2026: sueño, salud y batería que dura",
+        "format": "video",
+        "video_file": "marketing/videos/mejores-smartwatch-calidad-precio.mp4",
+        "primary_text": "Comparativa de relojes inteligentes por menos de 300 euros según tu móvil y lo que quieres medir: sueño, ECG, deporte o simp…",
+        "headline": "Mejores smartwatch 2026",
+        "description": "Guía de compra independiente",
+        "call_to_action": "LEARN_MORE",
+        "link": "https://rovik-ia.github.io/guias/mejores-smartwatch-calidad-precio/?utm_source=meta&utm_medium=paid&utm_campaign=mejores-smartwatch-calidad-precio"
+      }
+    },
+    {
+      "name": "Deshumidificadores",
+      "daily_budget_eur": 3.0,
+      "status": "PAUSED",
+      "optimization_goal": "LANDING_PAGE_VIEWS",
+      "billing_event": "IMPRESSIONS",
+      "targeting": {
+        "geo_locations": {
+          "countries": [
+            "ES"
+          ]
+        },
+        "age_min": 25,
+        "age_max": 64,
+        "publisher_platforms": [
+          "facebook",
+          "instagram"
+        ],
+        "instagram_positions": [
+          "stream",
+          "reels",
+          "story"
+        ],
+        "facebook_positions": [
+          "feed",
+          "video_feeds",
+          "story",
+          "facebook_reels"
+        ],
+        "interests_hint": [
+          "deshumidificadores",
+          "hogar",
+          "compras online"
+        ]
+      },
+      "ad": {
+        "name": "Los mejores deshumidificadores de 2026: cuántos litros necesitas y cuál comprar",
+        "format": "video",
+        "video_file": "marketing/videos/mejores-deshumidificadores.mp4",
+        "primary_text": "Cómo elegir deshumidificador para casa: capacidad real por habitación, ruido, consumo y drenaje, con los modelos de De'Longh…",
+        "headline": "Mejores deshumidificadores 2026",
+        "description": "Guía de compra independiente",
+        "call_to_action": "LEARN_MORE",
+        "link": "https://rovik-ia.github.io/guias/mejores-deshumidificadores/?utm_source=meta&utm_medium=paid&utm_campaign=mejores-deshumidificadores"
+      }
+    },
+    {
+      "name": "Mantas eléctricas",
+      "daily_budget_eur": 3.0,
+      "status": "PAUSED",
+      "optimization_goal": "LANDING_PAGE_VIEWS",
+      "billing_event": "IMPRESSIONS",
+      "targeting": {
+        "geo_locations": {
+          "countries": [
+            "ES"
+          ]
+        },
+        "age_min": 25,
+        "age_max": 64,
+        "publisher_platforms": [
+          "facebook",
+          "instagram"
+        ],
+        "instagram_positions": [
+          "stream",
+          "reels",
+          "story"
+        ],
+        "facebook_positions": [
+          "feed",
+          "video_feeds",
+          "story",
+          "facebook_reels"
+        ],
+        "interests_hint": [
+          "mantas eléctricas",
+          "hogar",
+          "compras online"
+        ]
+      },
+      "ad": {
+        "name": "Las mejores mantas eléctricas de 2026: calor por céntimos y sin riesgos",
+        "format": "video",
+        "video_file": "marketing/videos/mejores-mantas-electricas.mp4",
+        "primary_text": "Qué manta eléctrica comprar según uso, tamaño y seguridad, con el consumo real por noche y los modelos de Imetec, Cecotec, S…",
+        "headline": "Mejores mantas eléctricas 2026",
+        "description": "Guía de compra independiente",
+        "call_to_action": "LEARN_MORE",
+        "link": "https://rovik-ia.github.io/guias/mejores-mantas-electricas/?utm_source=meta&utm_medium=paid&utm_campaign=mejores-mantas-electricas"
+      }
+    },
+    {
+      "name": "Auriculares inalámbricos por menos de 100 euros",
+      "daily_budget_eur": 3.0,
+      "status": "PAUSED",
+      "optimization_goal": "LANDING_PAGE_VIEWS",
+      "billing_event": "IMPRESSIONS",
+      "targeting": {
+        "geo_locations": {
+          "countries": [
+            "ES"
+          ]
+        },
+        "age_min": 25,
+        "age_max": 64,
+        "publisher_platforms": [
+          "facebook",
+          "instagram"
+        ],
+        "instagram_positions": [
+          "stream",
+          "reels",
+          "story"
+        ],
+        "facebook_positions": [
+          "feed",
+          "video_feeds",
+          "story",
+          "facebook_reels"
+        ],
+        "interests_hint": [
+          "auriculares inalámbricos por menos de 100 euros",
+          "tecnologia",
+          "compras online"
+        ]
+      },
+      "ad": {
+        "name": "Los mejores auriculares inalámbricos por menos de 100 euros en 2026",
+        "format": "video",
+        "video_file": "marketing/videos/mejores-auriculares-inalambricos-menos-100-euros.mp4",
+        "primary_text": "Auriculares Bluetooth con cancelación de ruido y buen sonido sin pasar de 100 euros: Nothing, Xiaomi, Soundcore y AIWA compa…",
+        "headline": "Mejores auriculares inalámbricos por me…",
+        "description": "Guía de compra independiente",
+        "call_to_action": "LEARN_MORE",
+        "link": "https://rovik-ia.github.io/guias/mejores-auriculares-inalambricos-menos-100-euros/?utm_source=meta&utm_medium=paid&utm_campaign=mejores-auriculares-inalambricos-menos-100-euros"
+      }
+    },
+    {
+      "name": "Purificadores de aire",
+      "daily_budget_eur": 3.0,
+      "status": "PAUSED",
+      "optimization_goal": "LANDING_PAGE_VIEWS",
+      "billing_event": "IMPRESSIONS",
+      "targeting": {
+        "geo_locations": {
+          "countries": [
+            "ES"
+          ]
+        },
+        "age_min": 25,
+        "age_max": 64,
+        "publisher_platforms": [
+          "facebook",
+          "instagram"
+        ],
+        "instagram_positions": [
+          "stream",
+          "reels",
+          "story"
+        ],
+        "facebook_positions": [
+          "feed",
+          "video_feeds",
+          "story",
+          "facebook_reels"
+        ],
+        "interests_hint": [
+          "purificadores de aire",
+          "hogar",
+          "compras online"
+        ]
+      },
+      "ad": {
+        "name": "Los mejores purificadores de aire de 2026 para alergias, polvo y olores",
+        "format": "video",
+        "video_file": "marketing/videos/mejores-purificadores-de-aire.mp4",
+        "primary_text": "Cómo elegir purificador de aire con filtro HEPA según los metros de la estancia, con modelos de Levoit, AEG, Cecotec y Phili…",
+        "headline": "Mejores purificadores de aire 2026",
+        "description": "Guía de compra independiente",
+        "call_to_action": "LEARN_MORE",
+        "link": "https://rovik-ia.github.io/guias/mejores-purificadores-de-aire/?utm_source=meta&utm_medium=paid&utm_campaign=mejores-purificadores-de-aire"
+      }
+    },
+    {
+      "name": "Cepillos de dientes eléctricos",
+      "daily_budget_eur": 3.0,
+      "status": "PAUSED",
+      "optimization_goal": "LANDING_PAGE_VIEWS",
+      "billing_event": "IMPRESSIONS",
+      "targeting": {
+        "geo_locations": {
+          "countries": [
+            "ES"
+          ]
+        },
+        "age_min": 25,
+        "age_max": 64,
+        "publisher_platforms": [
+          "facebook",
+          "instagram"
+        ],
+        "instagram_positions": [
+          "stream",
+          "reels",
+          "story"
+        ],
+        "facebook_positions": [
+          "feed",
+          "video_feeds",
+          "story",
+          "facebook_reels"
+        ],
+        "interests_hint": [
+          "cepillos de dientes eléctricos",
+          "bienestar",
+          "compras online"
+        ]
+      },
+      "ad": {
+        "name": "Los mejores cepillos de dientes eléctricos de 2026: oscilante o sónico y cuál c…",
+        "format": "video",
+        "video_file": "marketing/videos/mejores-cepillos-de-dientes-electricos.mp4",
+        "primary_text": "Comparativa de cepillos eléctricos Oral-B, Philips Sonicare y Xiaomi por eficacia, sensor de presión, batería y precio de lo…",
+        "headline": "Mejores cepillos de dientes eléctricos…",
+        "description": "Guía de compra independiente",
+        "call_to_action": "LEARN_MORE",
+        "link": "https://rovik-ia.github.io/guias/mejores-cepillos-de-dientes-electricos/?utm_source=meta&utm_medium=paid&utm_campaign=mejores-cepillos-de-dientes-electricos"
+      }
+    }
+  ]
+}
