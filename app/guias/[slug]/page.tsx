@@ -28,7 +28,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
   const { slug } = await params;
   const a = getArticle(slug);
   if (!a) notFound();
-  const credit = (credits as Record<string, { photographer: string; url: string }>)[a.slug];
+  const credit = (credits as unknown as Record<string, { photographer: string; url: string }>)[a.slug];
   const related = articles.filter((x) => x.slug !== a.slug && x.category === a.category).slice(0, 3);
   const more = related.length < 3 ? articles.filter((x) => x.slug !== a.slug && !related.includes(x)).slice(0, 3 - related.length) : [];
 
@@ -76,7 +76,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
           <h2>Qué mirar antes de comprar</h2>
           {a.criteria.map((c) => (<div key={c.title}><h3>{c.title}</h3><p>{c.text}</p></div>))}
           <h2>Los modelos que merecen la pena</h2>
-          <div className="not-prose">{a.products.map((p, i) => <ProductCard key={p.name} p={p} index={i} />)}</div>
+          <div className="not-prose">{a.products.map((p, i) => <ProductCard key={p.name} p={p} index={i} slug={a.slug} />)}</div>
           <h2>Consejos para acertar</h2>
           <ul>{a.buyingTips.map((t) => <li key={t}>{t}</li>)}</ul>
           <h2>Preguntas frecuentes</h2>

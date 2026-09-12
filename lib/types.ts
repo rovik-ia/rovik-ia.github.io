@@ -8,6 +8,7 @@ export type Product = {
   idealFor: string;
   searchQuery: string; // consulta que se usa para el enlace a Amazon
   asin?: string; // si se conoce, enlace directo al producto
+  imageQuery?: string; // búsqueda en inglés para la imagen ilustrativa (Pexels)
 };
 
 export type Faq = { q: string; a: string };
