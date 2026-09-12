@@ -8,7 +8,10 @@ except ImportError:
     CTX = ssl.create_default_context()
 urllib.request.install_opener(urllib.request.build_opener(urllib.request.HTTPSHandler(context=CTX)))
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-KEY = next((l.split("=",1)[1].strip() for l in open(os.path.join(ROOT, ".env.local")) if l.startswith("PEXELS_API_KEY=")), None)
+KEY = os.environ.get("PEXELS_API_KEY")
+if not KEY and os.path.exists(os.path.join(ROOT, ".env.local")):
+    KEY = next((l.split("=",1)[1].strip() for l in open(os.path.join(ROOT, ".env.local")) if l.startswith("PEXELS_API_KEY=")), None)
+if not KEY: raise SystemExit("Falta PEXELS_API_KEY")
 UA = "Mozilla/5.0 TendenciaTop/1.0"
 QUERIES = {
   "_hero": "modern bright living room interior",
