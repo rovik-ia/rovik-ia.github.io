@@ -51,12 +51,31 @@ Cómo activar:
 Lo dispara solo el workflow `.github/workflows/notify-whatsapp.yml` cada vez que la rutina diaria sube un informe nuevo.
 
 Proveedores (se usa el primero configurado):
-- **CallMeBot** (gratuito, uso personal): secretos `WHATSAPP_PHONE` y `CALLMEBOT_APIKEY`.
-- **Twilio** (de pago, para volumen o uso comercial): `WHATSAPP_PHONE`, `TWILIO_SID`, `TWILIO_TOKEN`, `TWILIO_FROM`.
+- **WhatsApp Cloud API de Meta** (oficial y gratuito con número de prueba): `WHATSAPP_PHONE`, `META_TOKEN`, `META_PHONE_ID`, y variable `META_TEMPLATE` (por defecto `informe_diario`). **Opción recomendada.**
+- **CallMeBot** (gratuito pero de terceros): `WHATSAPP_PHONE` y `CALLMEBOT_APIKEY`. En septiembre de 2026 el bot estaba lleno y no admitía altas nuevas.
+- **Twilio** (de pago, proveedor oficial): `WHATSAPP_PHONE`, `TWILIO_SID`, `TWILIO_TOKEN`, `TWILIO_FROM`.
+- **Telegram** (respaldo instantáneo): `TELEGRAM_TOKEN` y `TELEGRAM_CHAT_ID`.
 
-Activar CallMeBot (solo lo puede hacer el titular del teléfono):
-1. Guardar en contactos el número +34 644 95 42 75.
-2. Enviarle por WhatsApp exactamente: `I allow callmebot to send me messages`
-3. Responde con la API key. Guardarla como secreto `CALLMEBOT_APIKEY` en GitHub y el teléfono con prefijo (+34…) como `WHATSAPP_PHONE`.
+### Alta en WhatsApp Cloud API (la hace el titular de la cuenta de Meta)
+
+1. En https://developers.facebook.com crear una app de tipo **Empresa** y añadir el producto **WhatsApp**.
+2. En *WhatsApp → Configuración de la API*: Meta da un **número de prueba** gratuito. Añadir el móvil propio en *Para* y verificarlo con el código. El número de prueba permite enviar gratis hasta a 5 destinatarios.
+3. Copiar el **Identificador del número de teléfono** (`META_PHONE_ID`).
+4. Crear un **token permanente**: *Configuración del negocio → Usuarios del sistema → Añadir → rol Administrador → Generar token* con los permisos `whatsapp_business_messaging` y `whatsapp_business_management` (`META_TOKEN`). El token temporal de la pantalla de inicio caduca en 24 horas y no sirve.
+5. En *Herramientas → Plantillas de mensajes*, crear una plantilla llamada `informe_diario`, categoría **Utilidad**, idioma **Español**, con este cuerpo exacto (5 variables):
+
+```
+Tendencia Top · {{1}}
+
+Guía de hoy: {{2}}
+Enlace: {{3}}
+
+Total publicado: {{4}} guías
+Ventas: {{5}}
+
+Informe completo en el repositorio del proyecto.
+```
+
+6. Guardar `META_TOKEN`, `META_PHONE_ID` y `WHATSAPP_PHONE` como secretos del repositorio en *Settings → Secrets and variables → Actions*.
 
 Prueba local sin enviar nada: `python3 scripts/notify_whatsapp.py --dry-run`

@@ -2,8 +2,11 @@
 """Envía el resumen del informe diario a WhatsApp.
 
 Proveedores admitidos (se elige el primero configurado):
-  1. CallMeBot  -> CALLMEBOT_APIKEY + WHATSAPP_PHONE        (gratuito, uso personal)
-  2. Twilio     -> TWILIO_SID + TWILIO_TOKEN + TWILIO_FROM + WHATSAPP_PHONE
+  1. WhatsApp Cloud API (Meta, oficial) -> META_TOKEN + META_PHONE_ID + WHATSAPP_PHONE
+                                           opcional META_TEMPLATE (por defecto "informe_diario")
+  2. CallMeBot  -> CALLMEBOT_APIKEY + WHATSAPP_PHONE        (gratuito, uso personal)
+  3. Twilio     -> TWILIO_SID + TWILIO_TOKEN + TWILIO_FROM + WHATSAPP_PHONE
+  4. Telegram   -> TELEGRAM_TOKEN + TELEGRAM_CHAT_ID        (respaldo instantáneo)
 
 Uso:
   python3 scripts/notify_whatsapp.py [--dry-run] [--report reports/AAAA-MM-DD.md]
@@ -11,7 +14,7 @@ Uso:
 Las credenciales se leen de variables de entorno y, en local, de .env.local
 (ese archivo está ignorado por git y nunca se sube al repositorio).
 """
-import argparse, base64, glob, os, re, sys, urllib.parse, urllib.request, ssl
+import argparse, base64, glob, json, os, re, sys, urllib.error, urllib.parse, urllib.request, ssl
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 try:
@@ -99,6 +102,43 @@ def build_message(d: dict) -> str:
     return msg if len(msg) <= MAX_LEN else msg[: MAX_LEN - 1] + "…"
 
 
+def send_meta(token: str, phone_id: str, to: str, d: dict, template: str) -> str:
+    """WhatsApp Cloud API oficial de Meta, con plantilla de 5 variables."""
+    url = f"https://graph.facebook.com/v21.0/{phone_id}/messages"
+    day, month, year = d["date"][8:10], d["date"][5:7], d["date"][:4]
+    params = [f"{day}/{month}/{year}", d["title"] or "Guía publicada", d["url"], str(d["total"]), d["sales"]]
+    body = {
+        "messaging_product": "whatsapp",
+        "to": to.lstrip("+"),
+        "type": "template",
+        "template": {
+            "name": template,
+            "language": {"code": "es"},
+            "components": [{"type": "body", "parameters": [{"type": "text", "text": clean_param(p)} for p in params]}],
+        },
+    }
+    req = urllib.request.Request(url, data=json.dumps(body).encode(), method="POST")
+    req.add_header("Authorization", "Bearer " + token)
+    req.add_header("Content-Type", "application/json")
+    try:
+        with urllib.request.urlopen(req, timeout=60, context=CTX) as r:
+            return r.read().decode("utf-8", "replace")[:400]
+    except urllib.error.HTTPError as e:
+        return "ERROR Meta: " + e.read().decode("utf-8", "replace")[:400]
+
+
+def clean_param(text: str) -> str:
+    """Los parámetros de plantilla no admiten saltos de línea ni tabulaciones."""
+    return " ".join(str(text).split())[:900] or "-"
+
+
+def send_telegram(token: str, chat_id: str, msg: str) -> str:
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+    data = urllib.parse.urlencode({"chat_id": chat_id, "text": msg}).encode()
+    with urllib.request.urlopen(urllib.request.Request(url, data=data), timeout=60, context=CTX) as r:
+        return r.read().decode("utf-8", "replace")[:300]
+
+
 def send_callmebot(phone: str, key: str, msg: str) -> str:
     url = "https://api.callmebot.com/whatsapp.php?" + urllib.parse.urlencode(
         {"phone": phone, "text": msg, "apikey": key}
@@ -126,29 +166,38 @@ def main() -> None:
     args = ap.parse_args()
 
     path = latest_report(args.report)
-    msg = build_message(parse(path))
+    data = parse(path)
+    msg = build_message(data)
     print(f"--- informe: {os.path.relpath(path, ROOT)}\n{msg}\n---")
 
     if args.dry_run:
         return
 
-    phone = env("WHATSAPP_PHONE")
-    if not phone:
+    phone = env("WHATSAPP_PHONE") or ""
+    if not phone and not (env("TELEGRAM_TOKEN") and env("TELEGRAM_CHAT_ID")):
         print("AVISO: falta WHATSAPP_PHONE; no se envía nada.")
         return
     if not phone.startswith("+"):
         phone = "+" + phone.lstrip("00").lstrip()
 
+    meta_token, meta_phone_id = env("META_TOKEN"), env("META_PHONE_ID")
     cmb = env("CALLMEBOT_APIKEY")
     sid, token, frm = env("TWILIO_SID"), env("TWILIO_TOKEN"), env("TWILIO_FROM")
-    if cmb:
+    tg_token, tg_chat = env("TELEGRAM_TOKEN"), env("TELEGRAM_CHAT_ID")
+    if meta_token and meta_phone_id:
+        print("enviando por WhatsApp Cloud API (Meta)…")
+        print(send_meta(meta_token, meta_phone_id, phone, data, env("META_TEMPLATE") or "informe_diario"))
+    elif cmb:
         print("enviando por CallMeBot…")
         print(send_callmebot(phone, cmb, msg))
     elif sid and token and frm:
         print("enviando por Twilio…")
         print(send_twilio(sid, token, frm, phone, msg))
+    elif tg_token and tg_chat:
+        print("enviando por Telegram…")
+        print(send_telegram(tg_token, tg_chat, msg))
     else:
-        print("AVISO: no hay proveedor configurado (CALLMEBOT_APIKEY o TWILIO_*); no se envía nada.")
+        print("AVISO: no hay proveedor configurado (META_*, CALLMEBOT_APIKEY, TWILIO_* o TELEGRAM_*); no se envía nada.")
 
 
 if __name__ == "__main__":

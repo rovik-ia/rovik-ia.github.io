@@ -20,7 +20,12 @@ jobs:
         run: python3 scripts/notify_whatsapp.py
         env:
           WHATSAPP_PHONE: ${{ secrets.WHATSAPP_PHONE }}
+          META_TOKEN: ${{ secrets.META_TOKEN }}
+          META_PHONE_ID: ${{ secrets.META_PHONE_ID }}
+          META_TEMPLATE: ${{ vars.META_TEMPLATE }}
           CALLMEBOT_APIKEY: ${{ secrets.CALLMEBOT_APIKEY }}
           TWILIO_SID: ${{ secrets.TWILIO_SID }}
           TWILIO_TOKEN: ${{ secrets.TWILIO_TOKEN }}
           TWILIO_FROM: ${{ secrets.TWILIO_FROM }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
