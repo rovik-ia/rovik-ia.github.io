@@ -12,7 +12,7 @@ on:
         default: ""
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: video-diario
@@ -39,6 +39,27 @@ jobs:
           path: marketing/broll
           key: broll-${{ github.run_id }}
           restore-keys: broll-
+
+      - name: Descargar y fijar las imágenes de la guía nueva
+        env:
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+        run: |
+          pip install --quiet pillow certifi
+          npx tsx scripts/export-articles.ts
+          python3 scripts/fetch_photos.py --missing
+
+      - name: Guardar las imágenes en el repositorio
+        run: |
+          git config user.name "Claude"
+          git config user.email "noreply@anthropic.com"
+          git add public/img lib/photoCredits.json
+          if git diff --cached --quiet; then
+            echo "No hay imágenes nuevas que guardar."
+          else
+            git commit -m "Imágenes de la guía del día"
+            git pull --rebase --autostash origin main
+            git push origin main
+          fi
 
       - name: Generar el vídeo
         env:
