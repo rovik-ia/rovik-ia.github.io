@@ -2,10 +2,12 @@
 """Vídeos verticales estilo TikTok/Reels para cada guía: B-roll de Pexels + tarjetas + subtítulos sincronizados + voz.
 
 Uso: ~/venv/bin/python scripts/make_videos.py [slug ...]
-Requiere: Pillow, imageio-ffmpeg (o ffmpeg), voz de macOS (say) y PEXELS_API_KEY en .env.local.
+Requiere: Pillow, imageio-ffmpeg (o ffmpeg), PEXELS_API_KEY y un motor de voz:
+`say` en macOS o edge-tts (voz neuronal) en cualquier sistema. Variables: TTS_ENGINE, TTS_VOICE, TTS_RATE.
 Salida: marketing/videos/<slug>.mp4 y <slug>.txt (texto de publicación con atribuciones).
 """
-import json, os, re, subprocess, sys, shutil, tempfile, wave, urllib.request, urllib.parse, hashlib, ssl
+import json, os, re, subprocess, sys, shutil, tempfile, time, wave, urllib.request, urllib.parse, hashlib, ssl
+from functools import lru_cache
 try:
     import certifi; _CTX = ssl.create_default_context(cafile=certifi.where())
 except ImportError:
@@ -19,9 +21,13 @@ OUT = os.path.join(ROOT, "marketing", "videos")
 BROLL = os.path.join(ROOT, "marketing", "broll")
 W, H, FPS = 1080, 1920, 30
 FG = (255, 255, 255); ACCENT = (232, 93, 24); MUTED = (215, 218, 225)
-F_BLACK = "/System/Library/Fonts/Supplemental/Arial Black.ttf"
-F_BOLD = "/System/Library/Fonts/Supplemental/Arial Bold.ttf"
-F_REG = "/System/Library/Fonts/Supplemental/Arial.ttf"
+MANROPE = os.path.join(ROOT, "assets", "fonts", "Manrope.ttf")
+MAC_FONTS = {
+    "black": "/System/Library/Fonts/Supplemental/Arial Black.ttf",
+    "bold": "/System/Library/Fonts/Supplemental/Arial Bold.ttf",
+    "reg": "/System/Library/Fonts/Supplemental/Arial.ttf",
+}
+VARIATIONS = {"black": "ExtraBold", "bold": "Bold", "reg": "Medium"}
 CATS = {"hogar": "Hogar", "cocina": "Cocina", "bienestar": "Bienestar", "tecnologia": "Tecnología"}
 
 def env(key):
@@ -37,12 +43,24 @@ def ffmpeg_bin():
     import imageio_ffmpeg; return imageio_ffmpeg.get_ffmpeg_exe()
 FFMPEG = ffmpeg_bin()
 
-def pick_voice():
-    out = subprocess.run(["say", "-v", "?"], capture_output=True, text=True).stdout
-    for pref in ("Mónica (Mejorada)", "Mónica (Enhanced)", "Marisol", "Mónica"):
-        if pref in out: return pref
-    return "Mónica"
-VOICE = pick_voice()
+# --- Motor de voz: `say` en macOS, edge-tts (voz neuronal) en el resto ---
+EDGE_VOICE = os.environ.get("TTS_VOICE", "es-ES-ElviraNeural")
+EDGE_RATE = os.environ.get("TTS_RATE", "+30%")
+
+
+def pick_engine():
+    """Devuelve ('say', voz) en macOS con voz española, o ('edge', voz) si no."""
+    if os.environ.get("TTS_ENGINE"):
+        return os.environ["TTS_ENGINE"], EDGE_VOICE
+    if shutil.which("say"):
+        out = subprocess.run(["say", "-v", "?"], capture_output=True, text=True).stdout
+        for pref in ("Mónica (Mejorada)", "Mónica (Enhanced)", "Marisol", "Mónica"):
+            if pref in out:
+                return "say", pref
+    return "edge", EDGE_VOICE
+
+
+ENGINE, VOICE = pick_engine()
 
 # --- Búsquedas de B-roll por guía (inglés: Pexels indexa mejor) ---
 BROLL_QUERIES = {
@@ -58,41 +76,90 @@ BROLL_QUERIES = {
     "mejores-cepillos-de-dientes-electricos": ["electric toothbrush", "brushing teeth bathroom", "smile teeth close up", "bathroom morning routine", "toothbrush close up", "dental care"],
     "mejores-sillas-de-escritorio-ergonomicas": ["ergonomic office chair", "home office desk", "working from home laptop", "back pain sitting", "modern workspace", "office chair close up"],
 }
+UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_6) TendenciaTop/1.0"
 GENERIC = {"hogar": ["modern home interior", "cozy living room", "home life"], "cocina": ["modern kitchen", "cooking at home"],
            "bienestar": ["healthy lifestyle", "wellness morning"], "tecnologia": ["technology gadgets", "modern lifestyle tech"]}
 
-def pexels_video(query, min_dur=4):
-    """Devuelve (ruta_mp4, atribución) para una consulta, usando caché local."""
+def pexels_search(query, per_page=12):
+    """Candidatos verticales para una consulta, cacheados en disco."""
     key = env("PEXELS_API_KEY")
-    if not key: raise SystemExit("Falta PEXELS_API_KEY en .env.local")
+    if not key:
+        raise SystemExit("Falta PEXELS_API_KEY (variable de entorno o .env.local)")
     os.makedirs(BROLL, exist_ok=True)
-    h = hashlib.md5(query.encode()).hexdigest()[:10]
-    meta = os.path.join(BROLL, f"{h}.json")
-    if os.path.exists(meta):
-        m = json.load(open(meta))
-        if os.path.exists(m["path"]): return m["path"], m["credit"]
-    url = "https://api.pexels.com/videos/search?" + urllib.parse.urlencode({"query": query, "orientation": "portrait", "size": "medium", "per_page": 8})
-    UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_6) TendenciaTop/1.0"
+    cache = os.path.join(BROLL, "q_" + hashlib.md5(query.encode()).hexdigest()[:10] + ".json")
+    if os.path.exists(cache):
+        return json.load(open(cache))
+    url = "https://api.pexels.com/videos/search?" + urllib.parse.urlencode(
+        {"query": query, "orientation": "portrait", "size": "medium", "per_page": per_page})
     req = urllib.request.Request(url, headers={"Authorization": key, "User-Agent": UA})
     data = json.load(urllib.request.urlopen(req, timeout=30))
-    best = None
+    out = []
     for v in data.get("videos", []):
-        if v["duration"] < min_dur: continue
+        if v["duration"] < 4:
+            continue
         files = [f for f in v["video_files"] if f.get("width") and f.get("height") and f["height"] > f["width"]]
-        if not files: continue
+        if not files:
+            continue
         f = min(files, key=lambda f: abs(f["width"] - 1080))
-        best = (v, f); break
-    if not best: return None, None
-    v, f = best
-    path = os.path.join(BROLL, f"{h}.mp4")
-    with urllib.request.urlopen(urllib.request.Request(f["link"], headers={"User-Agent": UA}), timeout=120) as r, open(path, "wb") as fh:
-        shutil.copyfileobj(r, fh)
-    credit = f"Vídeo de {v['user']['name']} en Pexels ({v['url']})"
-    json.dump({"path": path, "credit": credit, "query": query}, open(meta, "w"))
-    return path, credit
+        out.append({"id": v["id"], "link": f["link"],
+                    "credit": f"Vídeo de {v['user']['name']} en Pexels ({v['url']})"})
+    json.dump(out, open(cache, "w"))
+    return out
+
+
+def download_clip(cand):
+    path = os.path.join(BROLL, f"{cand['id']}.mp4")
+    if not os.path.exists(path) or os.path.getsize(path) < 10000:
+        req = urllib.request.Request(cand["link"], headers={"User-Agent": UA})
+        with urllib.request.urlopen(req, timeout=180) as r, open(path, "wb") as fh:
+            shutil.copyfileobj(r, fh)
+    return path
+
+
+def pick_clips(queries, n):
+    """n clips DISTINTOS repartidos entre las consultas, para que no se repita el fondo."""
+    pools, seen = [], set()
+    for q in queries:
+        try:
+            pools.append(pexels_search(q))
+        except Exception as e:
+            print(f"  aviso: falló la búsqueda '{q}': {e}")
+    pools = [p for p in pools if p]
+    if not pools:
+        raise SystemExit("Pexels no devolvió ningún vídeo para estas consultas")
+    elegidos = []
+    for i in range(n):
+        orden = [pools[i % len(pools)]] + pools
+        cand = next((c for pool in orden for c in pool if c["id"] not in seen), None)
+        if cand is None:                      # se agotaron: se permite repetir
+            cand = pools[i % len(pools)][0]
+        else:
+            seen.add(cand["id"])
+        elegidos.append((download_clip(cand), cand["credit"]))
+    return elegidos
+
+
+def broll_queries(a):
+    """Consultas de B-roll: las afinadas a mano o, si no, las que trae la propia guía."""
+    if a["slug"] in BROLL_QUERIES:
+        return BROLL_QUERIES[a["slug"]]
+    qs = [a.get("photoQuery")] + [p.get("imageQuery") for p in a["products"][:5]]
+    qs = [q for q in qs if q]
+    return qs or GENERIC[a["category"]]
+
 
 # --- Texto y tipografía ---
-def font(p, s): return ImageFont.truetype(p, s)
+@lru_cache(maxsize=None)
+def font(kind, size):
+    """kind: black | bold | reg. Usa Manrope empaquetada; si no está, Arial de macOS."""
+    if os.path.exists(MANROPE):
+        f = ImageFont.truetype(MANROPE, size)
+        try:
+            f.set_variation_by_name(VARIATIONS[kind])
+        except Exception:
+            pass
+        return f
+    return ImageFont.truetype(MAC_FONTS[kind], size)
 
 def wrap(draw, text, f, max_w):
     words, lines, cur = text.split(), [], ""
@@ -130,42 +197,42 @@ def base_layer():
     if GRAD is None: GRAD = gradient_layer()
     img = GRAD.copy(); d = ImageDraw.Draw(img)
     d.rectangle([0, 0, W, 10], fill=ACCENT + (255,))
-    d.text((60, 64), "Tendencia", font=font(F_BLACK, 46), fill=ACCENT + (255,), stroke_width=2, stroke_fill=(0, 0, 0, 180))
-    d.text((60 + d.textlength("Tendencia", font=font(F_BLACK, 46)) + 14, 64), "Top", font=font(F_BLACK, 46), fill=FG + (255,), stroke_width=2, stroke_fill=(0, 0, 0, 180))
+    d.text((60, 64), "Tendencia", font=font("black", 46), fill=ACCENT + (255,), stroke_width=2, stroke_fill=(0, 0, 0, 180))
+    d.text((60 + d.textlength("Tendencia", font=font("black", 46)) + 14, 64), "Top", font=font("black", 46), fill=FG + (255,), stroke_width=2, stroke_fill=(0, 0, 0, 180))
     return img, d
 
 def card_hook(a, topic):
     img, d = base_layer()
     d.rounded_rectangle([60, 300, 60 + 300, 360], radius=30, fill=ACCENT + (255,))
-    d.text((60 + 28, 312), CATS.get(a["category"], "").upper(), font=font(F_BOLD, 30), fill=FG + (255,))
-    text_block(d, (60, 400), f"¿Qué {topic} comprar en 2026?", font(F_BLACK, 92), FG + (255,), W - 120, lh=104, stroke=4, stroke_fill=(0, 0, 0, 200))
+    d.text((60 + 28, 312), CATS.get(a["category"], "").upper(), font=font("bold", 30), fill=FG + (255,))
+    text_block(d, (60, 400), f"¿Qué {topic} comprar en 2026?", font("black", 92), FG + (255,), W - 120, lh=104, stroke=4, stroke_fill=(0, 0, 0, 200))
     return img
 
 def card_product(i, p):
     img, d = base_layer()
-    d.text((60, 250), f"{i}", font=font(F_BLACK, 170), fill=ACCENT + (255,), stroke_width=4, stroke_fill=(0, 0, 0, 200))
-    d.text((60 + d.textlength(f"{i}", font=font(F_BLACK, 170)) + 8, 345), "/5", font=font(F_BLACK, 60), fill=MUTED + (255,), stroke_width=3, stroke_fill=(0, 0, 0, 200))
+    d.text((60, 250), f"{i}", font=font("black", 170), fill=ACCENT + (255,), stroke_width=4, stroke_fill=(0, 0, 0, 200))
+    d.text((60 + d.textlength(f"{i}", font=font("black", 170)) + 8, 345), "/5", font=font("black", 60), fill=MUTED + (255,), stroke_width=3, stroke_fill=(0, 0, 0, 200))
     if p.get("badge"):
-        bw = d.textlength(p["badge"].upper(), font=font(F_BOLD, 30)) + 56
+        bw = d.textlength(p["badge"].upper(), font=font("bold", 30)) + 56
         d.rounded_rectangle([60, 450, 60 + bw, 512], radius=31, fill=ACCENT + (255,))
-        d.text((88, 462), p["badge"].upper(), font=font(F_BOLD, 30), fill=FG + (255,))
-    y = text_block(d, (60, 545), p["name"], font(F_BLACK, 80), FG + (255,), W - 120, lh=92, max_lines=3, stroke=4, stroke_fill=(0, 0, 0, 210))
-    d.text((60, y + 8), p["priceRange"], font=font(F_BLACK, 56), fill=ACCENT + (255,), stroke_width=3, stroke_fill=(0, 0, 0, 200))
+        d.text((88, 462), p["badge"].upper(), font=font("bold", 30), fill=FG + (255,))
+    y = text_block(d, (60, 545), p["name"], font("black", 80), FG + (255,), W - 120, lh=92, max_lines=3, stroke=4, stroke_fill=(0, 0, 0, 210))
+    d.text((60, y + 8), p["priceRange"], font=font("black", 56), fill=ACCENT + (255,), stroke_width=3, stroke_fill=(0, 0, 0, 200))
     return img
 
 def card_cta(a):
     img, d = base_layer()
-    text_block(d, (60, 330), "La guía completa con enlaces está en", font(F_BLACK, 64), FG + (255,), W - 120, lh=76, stroke=4, stroke_fill=(0, 0, 0, 210))
+    text_block(d, (60, 330), "La guía completa con enlaces está en", font("black", 64), FG + (255,), W - 120, lh=76, stroke=4, stroke_fill=(0, 0, 0, 210))
     d.rounded_rectangle([60, 560, W - 60, 700], radius=34, fill=ACCENT + (255,))
-    d.text((96, 596), "rovik-ia.github.io", font=font(F_BLACK, 68), fill=FG + (255,))
+    d.text((96, 596), "rovik-ia.github.io", font=font("black", 68), fill=FG + (255,))
     y = 780
     for q in a["quickPick"][:5]:
-        y = text_block(d, (60, y), f"{q['label']}: {q['product']}", font(F_BOLD, 38), FG + (255,), W - 120, lh=48, max_lines=2, stroke=3, stroke_fill=(0, 0, 0, 200)) + 10
+        y = text_block(d, (60, y), f"{q['label']}: {q['product']}", font("bold", 38), FG + (255,), W - 120, lh=48, max_lines=2, stroke=3, stroke_fill=(0, 0, 0, 200)) + 10
     return img
 
 def caption_png(text):
     img = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(img)
-    f = font(F_BLACK, 66); lines = wrap(d, text.upper(), f, W - 140)
+    f = font("black", 66); lines = wrap(d, text.upper(), f, W - 140)
     lh = 80; total = lh * len(lines); y = H - 640 - total // 2
     for ln in lines:
         w = d.textlength(ln, font=f); x = (W - w) / 2
@@ -188,8 +255,31 @@ def phrases(text, max_words=6):
     return [p for p in out if p]
 
 def tts(text, path):
-    subprocess.run(["say", "-v", VOICE, "-r", "190", "-o", path, "--data-format=LEI16@44100", text], check=True)
-    with wave.open(path) as w: return w.getnframes() / w.getframerate()
+    """Sintetiza `text` en un WAV mono 44,1 kHz y devuelve su duración en segundos."""
+    if ENGINE == "say":
+        subprocess.run(["say", "-v", VOICE, "-r", "190", "-o", path,
+                        "--data-format=LEI16@44100", text], check=True)
+    else:
+        mp3 = path + ".mp3"
+        last = None
+        for intento in range(3):
+            try:
+                subprocess.run([sys.executable, "-m", "edge_tts", "--voice", VOICE,
+                                "--rate", EDGE_RATE, "--text", text, "--write-media", mp3],
+                               check=True, capture_output=True, timeout=120)
+                if os.path.getsize(mp3) > 1000:
+                    break
+                last = RuntimeError("audio vacío")
+            except Exception as e:
+                last = e
+                time.sleep(2 + 3 * intento)
+        else:
+            raise RuntimeError(f"edge-tts falló tras 3 intentos: {last}")
+        subprocess.run([FFMPEG, "-y", "-loglevel", "error", "-i", mp3,
+                        "-ar", "44100", "-ac", "1", path], check=True)
+        os.remove(mp3)
+    with wave.open(path) as w:
+        return w.getnframes() / w.getframerate()
 
 def scene_audio(text, tmp, idx):
     """TTS por frases; devuelve (wav_concatenado, [(frase, t_ini, t_fin)], duración)."""
@@ -230,27 +320,23 @@ def topic_of(a):
 
 def build(a):
     slug = a["slug"]; topic = topic_of(a); tmp = tempfile.mkdtemp(prefix="tt_")
-    queries = BROLL_QUERIES.get(slug) or GENERIC[a["category"]] * 3
-    scenes = []  # (card, narración, query)
-    scenes.append((card_hook(a, topic), f"¿Qué {topic} comprar? Estos son los cinco que merecen la pena.", queries[0]))
+    scenes = []  # (tarjeta, narración)
+    scenes.append((card_hook(a, topic), f"¿Qué {topic} comprar? Estos son los cinco que merecen la pena."))
     for i, p in enumerate(a["products"][:5], 1):
-        nar = f"Número {i}: {p['name']}. {p['pros'][0]}. Ideal para {p['idealFor'].rstrip('.')}."
-        scenes.append((card_product(i, p), nar, queries[min(i, len(queries) - 1)]))
-    scenes.append((card_cta(a), "Tienes la guía completa con enlaces a Amazon en rovik-ia punto github punto io. También en la bio.", queries[0]))
+        scenes.append((card_product(i, p), f"Número {i}: {p['name']}. {p['pros'][0]}."))
+    scenes.append((card_cta(a), "Guía completa y enlaces en rovik-ia punto github punto io."))
+    clips = pick_clips(broll_queries(a), len(scenes))
     # audio primero para conocer duraciones
-    audios = [scene_audio(nar, tmp, k) for k, (_, nar, _) in enumerate(scenes)]
+    audios = [scene_audio(nar, tmp, k) for k, (_, nar) in enumerate(scenes)]
     T = sum(d for _, _, d in audios) + 0.3 * len(scenes)
-    clips = []; credits = []; t0 = 0.0
-    for k, ((card, _, q), (wav, timeline, d)) in enumerate(zip(scenes, audios)):
-        broll, credit = pexels_video(q)
-        if not broll:
-            broll, credit = pexels_video(GENERIC[a["category"]][0])
+    partes = []; credits = []; t0 = 0.0
+    for k, ((card, _), (wav, timeline, d), (broll, credit)) in enumerate(zip(scenes, audios, clips)):
         if credit and credit not in credits: credits.append(credit)
         dur = d + 0.3
-        clips.append(render_scene(tmp, k, broll, card, timeline, wav, dur, t0, T)); t0 += dur
+        partes.append(render_scene(tmp, k, broll, card, timeline, wav, dur, t0, T)); t0 += dur
     lst = os.path.join(tmp, "list.txt")
     with open(lst, "w") as f:
-        for c in clips: f.write(f"file '{c}'\n")
+        for c in partes: f.write(f"file '{c}'\n")
     os.makedirs(OUT, exist_ok=True)
     out = os.path.join(OUT, f"{slug}.mp4")
     subprocess.run([FFMPEG, "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", lst, "-c", "copy", "-movflags", "+faststart", out], check=True)
@@ -264,8 +350,14 @@ def build(a):
     return out, T
 
 if __name__ == "__main__":
-    arts = json.load(open(DATA)); want = set(sys.argv[1:])
-    print("voz:", VOICE)
+    arts = json.load(open(DATA))
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    if "--latest" in sys.argv:                    # la guía publicada más reciente
+        args = [max(arts, key=lambda a: (a.get("updated") or a["date"], -arts.index(a)))["slug"]]
+        print("guía más reciente:", args[0])
+    want = set(args)
+    print(f"motor de voz: {ENGINE} · {VOICE}")
+    print("tipografía:", "Manrope (empaquetada)" if os.path.exists(MANROPE) else "Arial de macOS")
     for a in arts:
         if want and a["slug"] not in want: continue
         out, T = build(a); print(f"OK {os.path.basename(out)} {T:.1f}s")
