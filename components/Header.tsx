@@ -8,14 +8,16 @@ export default function Header() {
         <Link href="/" className="font-extrabold tracking-tight text-xl">
           <span className="text-accent">Tendencia</span> Top
         </Link>
-        <nav className="flex items-center gap-4 text-sm font-medium text-muted overflow-x-auto">
-          {Object.entries(CATEGORIES).map(([slug, c]) => (
-            <Link key={slug} href={`/categorias/${slug}/`} className="hover:text-fg whitespace-nowrap">{c.name}</Link>
-          ))}
-          <Link href="/productos/" className="whitespace-nowrap rounded-lg bg-accent-dark px-3 py-1.5 font-bold text-white hover:bg-accent-deep">
-            Productos
+        <div className="flex items-center gap-3 min-w-0">
+          <nav className="hidden sm:flex items-center gap-4 text-sm font-medium text-muted overflow-x-auto">
+            {Object.entries(CATEGORIES).map(([slug, c]) => (
+              <Link key={slug} href={`/categorias/${slug}/`} className="hover:text-fg whitespace-nowrap">{c.name}</Link>
+            ))}
+          </nav>
+          <Link href="/productos/" className="shrink-0 whitespace-nowrap rounded-lg bg-accent-dark px-3.5 py-2 text-sm font-bold text-white hover:bg-accent-deep">
+            Buscar producto
           </Link>
-        </nav>
+        </div>
       </div>
     </header>
   );

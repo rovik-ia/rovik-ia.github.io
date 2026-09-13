@@ -11,6 +11,7 @@ export default function Footer() {
           <p className="text-white/70">Fotografías y vídeos de <a href="https://www.pexels.com" className="underline" rel="noopener" target="_blank">Pexels</a> y sus autores.</p>
         </div>
         <nav className="grid grid-cols-2 gap-2 text-sm">
+          <Link href="/productos/" className="hover:text-white">Todos los productos</Link>
           <Link href="/sobre/" className="hover:text-white">Sobre nosotros</Link>
           <Link href="/afiliacion/" className="hover:text-white">Aviso de afiliación</Link>
           <Link href="/aviso-legal/" className="hover:text-white">Aviso legal</Link>
