@@ -45,16 +45,16 @@ Cómo activar:
 - No usar imágenes de producto de Amazon fuera de sus herramientas oficiales.
 - El aviso de afiliado debe estar visible en cada página (ya está) y en los vídeos (está en el cierre y en el texto de la publicación).
 
-## 4. Aviso diario por WhatsApp
+## 4. Aviso diario por Telegram y WhatsApp
 
 `scripts/notify_whatsapp.py` lee el informe más reciente de `reports/` y envía un resumen por WhatsApp.
-Lo dispara solo el workflow `.github/workflows/notify-whatsapp.yml` cada vez que la rutina diaria sube un informe nuevo.
+Lo dispara solo el workflow `.github/workflows/notificacion-diaria.yml` cada vez que la rutina diaria sube un informe nuevo.
 
 Proveedores (se usa el primero configurado):
 - **WhatsApp Cloud API de Meta** (oficial y gratuito con número de prueba): `WHATSAPP_PHONE`, `META_TOKEN`, `META_PHONE_ID`, y variable `META_TEMPLATE` (por defecto `informe_diario`). **Opción recomendada.**
 - **CallMeBot** (gratuito pero de terceros): `WHATSAPP_PHONE` y `CALLMEBOT_APIKEY`. En septiembre de 2026 el bot estaba lleno y no admitía altas nuevas.
 - **Twilio** (de pago, proveedor oficial): `WHATSAPP_PHONE`, `TWILIO_SID`, `TWILIO_TOKEN`, `TWILIO_FROM`.
-- **Telegram** (respaldo instantáneo): `TELEGRAM_TOKEN` y `TELEGRAM_CHAT_ID`.
+- **Telegram** (ACTIVO desde el 14-09-2026): secretos `TELEGRAM_TOKEN` y `TELEGRAM_CHAT_ID`. Bot @Tendenciatop_informes_bot. Para obtener el chat_id: abrir el chat del bot, pulsar Empezar y ejecutar `python3 scripts/telegram_chat_id.py <TOKEN>`.
 
 ### Alta en WhatsApp Cloud API (la hace el titular de la cuenta de Meta)
 

@@ -1,4 +1,4 @@
-name: Aviso por WhatsApp del informe diario
+name: Aviso diario del informe
 
 on:
   push:
