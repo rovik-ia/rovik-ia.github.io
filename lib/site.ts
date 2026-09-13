@@ -29,7 +29,11 @@ export const AFFILIATE_DISCLOSURE =
 export const CATEGORIES: Record<string, { name: string; description: string }> = {
   hogar: {
     name: "Hogar",
-    description: "Limpieza, climatización y todo lo que hace la casa más cómoda.",
+    description: "Limpieza, descanso y todo lo que hace la casa más cómoda.",
+  },
+  clima: {
+    name: "Clima",
+    description: "Calor, frío, humedad y calidad del aire en casa.",
   },
   cocina: {
     name: "Cocina",

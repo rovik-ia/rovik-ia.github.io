@@ -8,11 +8,13 @@ export default function Header() {
         <Link href="/" className="font-extrabold tracking-tight text-xl">
           <span className="text-accent">Tendencia</span> Top
         </Link>
-        <nav className="flex gap-5 text-sm font-medium text-muted overflow-x-auto">
+        <nav className="flex items-center gap-4 text-sm font-medium text-muted overflow-x-auto">
           {Object.entries(CATEGORIES).map(([slug, c]) => (
             <Link key={slug} href={`/categorias/${slug}/`} className="hover:text-fg whitespace-nowrap">{c.name}</Link>
           ))}
-          <Link href="/sobre/" className="hover:text-fg whitespace-nowrap">Sobre nosotros</Link>
+          <Link href="/productos/" className="whitespace-nowrap rounded-lg bg-accent-dark px-3 py-1.5 font-bold text-white hover:bg-accent-deep">
+            Productos
+          </Link>
         </nav>
       </div>
     </header>

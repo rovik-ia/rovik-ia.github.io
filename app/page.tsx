@@ -1,39 +1,81 @@
 import Link from "next/link";
 import { articles } from "@/lib/articles";
+import { allProducts, topPicks } from "@/lib/products";
 import ArticleCard from "@/components/ArticleCard";
+import BuyButton from "@/components/BuyButton";
 import Disclosure from "@/components/Disclosure";
 import { CATEGORIES } from "@/lib/site";
 
 export default function Home() {
   const sorted = [...articles].sort((a, b) => (b.updated ?? b.date).localeCompare(a.updated ?? a.date));
   const [first, ...rest] = sorted;
+  const destacados = topPicks().slice(0, 6);
+  const totalProductos = allProducts().length;
+
   return (
     <div>
       <section className="relative isolate overflow-hidden bg-ink text-white">
         <img src="/img/_hero.jpg" srcSet="/img/_hero-800.jpg 800w, /img/_hero.jpg 1600w" sizes="100vw" alt="" fetchPriority="high" decoding="async" className="absolute inset-0 img-cover opacity-45" />
         <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-ink/20" />
-        <div className="container relative py-24 sm:py-32 max-w-3xl">
+        <div className="container relative py-20 sm:py-28 max-w-3xl">
           <div className="text-[12px] uppercase tracking-[0.18em] font-bold text-orange-300 mb-4">Guías de compra independientes</div>
           <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.05]">
             Compra bien a la primera. <span className="text-accent">Sin listas infinitas.</span>
           </h1>
           <p className="text-white/75 mt-6 text-lg max-w-xl leading-relaxed">
-            Analizamos los productos más buscados en España y te decimos qué mirar, qué modelo encaja con tu presupuesto y para quién es cada uno.
+            Analizamos los productos más buscados en España y te llevamos directo al modelo que encaja contigo.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link href={`/guias/${first.slug}/`} className="bg-accent-dark hover:bg-accent-deep text-white font-bold rounded-xl px-5 py-3">Última guía: {CATEGORIES[first.category].name}</Link>
-            <Link href="#guias" className="bg-white/10 hover:bg-white/15 text-white font-bold rounded-xl px-5 py-3">Todas las guías de compra</Link>
+            <Link href="/productos/" className="bg-accent-dark hover:bg-accent-deep text-white font-bold rounded-xl px-5 py-3">
+              Buscar un producto
+            </Link>
+            <Link href="#guias" className="bg-white/10 hover:bg-white/15 text-white font-bold rounded-xl px-5 py-3">
+              Todas las guías de compra
+            </Link>
           </div>
         </div>
       </section>
 
       <div className="container -mt-6 relative"><Disclosure /></div>
 
-      <section id="guias" className="container pt-14">
-        <div className="flex items-end justify-between mb-6">
+      <section className="container pt-12">
+        <div className="flex flex-wrap items-end justify-between gap-3 mb-5">
+          <div>
+            <h2 className="text-3xl font-extrabold tracking-tight">Lo más recomendado</h2>
+            <p className="text-muted mt-1">La mejor opción de cada guía, con su precio a un clic.</p>
+          </div>
+          <Link href="/productos/" className="text-sm font-bold text-accent-dark underline underline-offset-4">
+            Ver los {totalProductos} productos
+          </Link>
+        </div>
+        <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {destacados.map((p) => (
+            <li key={p.key} className="card overflow-hidden flex flex-col">
+              <Link href={p.guideUrl} className="block aspect-[16/10] bg-line overflow-hidden">
+                <img src={p.img} alt="" loading="lazy" className="img-cover" />
+              </Link>
+              <div className="p-4 flex flex-col gap-2 flex-1">
+                <div className="text-[11px] uppercase tracking-wider font-bold text-accent-dark">
+                  {p.badge ?? p.categoryName} · {p.topic}
+                </div>
+                <h3 className="font-extrabold leading-snug">{p.name}</h3>
+                <p className="text-sm text-muted">{p.pro}</p>
+                <div className="text-sm font-bold mt-auto pt-2">{p.priceRange}</div>
+                <BuyButton href={p.href} size="sm" label="Ver precio en Amazon" />
+                <Link href={p.guideUrl} className="text-xs text-muted underline underline-offset-4 hover:text-fg">
+                  Comparar con los otros 4 modelos
+                </Link>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section id="guias" className="container pt-16">
+        <div className="flex items-end justify-between mb-5">
           <div>
             <h2 className="text-3xl font-extrabold tracking-tight">Últimas guías</h2>
-            <p className="text-muted mt-1">Actualizadas cada semana. {articles.length} guías publicadas.</p>
+            <p className="text-muted mt-1">Una guía nueva cada día. {articles.length} publicadas.</p>
           </div>
         </div>
         <div className="grid md:grid-cols-3 gap-5">
@@ -44,17 +86,18 @@ export default function Home() {
       </section>
 
       <section className="container pt-16">
-        <h2 className="text-3xl font-extrabold tracking-tight mb-6">Por categoría</h2>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <h2 className="text-3xl font-extrabold tracking-tight mb-5">Por categoría</h2>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {Object.entries(CATEGORIES).map(([slug, c]) => {
             const cover = articles.find((a) => a.category === slug);
+            const n = articles.filter((a) => a.category === slug).length;
             return (
               <Link key={slug} href={`/categorias/${slug}/`} className="card overflow-hidden group relative aspect-[4/3] text-white">
                 {cover && <img src={`/img/guias/${cover.slug}.jpg`} alt="" loading="lazy" className="img-cover absolute inset-0 group-hover:scale-[1.04] transition-transform duration-500" />}
-                <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/30 to-transparent" />
-                <div className="absolute bottom-0 p-5">
-                  <div className="font-extrabold text-2xl">{c.name}</div>
-                  <div className="text-sm text-white/75 mt-1">{c.description}</div>
+                <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/40 to-transparent" />
+                <div className="absolute bottom-0 p-4">
+                  <div className="font-extrabold text-xl">{c.name}</div>
+                  <div className="text-xs text-white/75 mt-0.5">{n} {n === 1 ? "guía" : "guías"}</div>
                 </div>
               </Link>
             );
@@ -66,7 +109,7 @@ export default function Home() {
         <div className="card p-8 grid md:grid-cols-3 gap-8">
           {[
             ["Independientes", "Ninguna marca paga por aparecer ni por subir puestos. Vivimos de las comisiones de afiliación, que no cambian tu precio."],
-            ["Con criterio", "Cada guía explica primero qué mirar y por qué. Después, los modelos que lo cumplen en cada presupuesto."],
+            ["Con criterio", "Cada guía explica qué mirar y por qué. Después, los modelos que lo cumplen en cada presupuesto."],
             ["Al día", "Revisamos precios, novedades y disponibilidad y marcamos la fecha de la última actualización en cada guía."],
           ].map(([t, d]) => (
             <div key={t}>

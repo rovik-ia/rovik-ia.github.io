@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { articles, getArticle } from "@/lib/articles";
 import ProductCard from "@/components/ProductCard";
+import QuickCompare from "@/components/QuickCompare";
+import StickyBuy from "@/components/StickyBuy";
 import ArticleCard, { formatDate } from "@/components/ArticleCard";
 import Disclosure from "@/components/Disclosure";
 import { CATEGORIES, SITE } from "@/lib/site";
@@ -62,21 +64,11 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
         <div className="mt-6"><Disclosure /></div>
         <div className="prose mt-8">
           {a.intro.map((p, i) => <p key={i}>{p}</p>)}
-          <div className="card p-6 my-8 not-prose">
-            <div className="font-extrabold text-lg mb-3">Resumen rápido</div>
-            <ul className="space-y-2 text-[15px]">
-              {a.quickPick.map((q, i) => (
-                <li key={q.label} className="flex gap-3">
-                  <span className="text-accent-dark font-bold min-w-[11rem]">{q.label}</span>
-                  <a href={`#producto-${i + 1}`} className="underline decoration-line underline-offset-4 hover:decoration-accent">{q.product}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <QuickCompare a={a} />
+          <h2>El análisis de cada modelo</h2>
+          <div className="not-prose">{a.products.map((p, i) => <ProductCard key={p.name} p={p} index={i} slug={a.slug} />)}</div>
           <h2>Qué mirar antes de comprar</h2>
           {a.criteria.map((c) => (<div key={c.title}><h3>{c.title}</h3><p>{c.text}</p></div>))}
-          <h2>Los modelos que merecen la pena</h2>
-          <div className="not-prose">{a.products.map((p, i) => <ProductCard key={p.name} p={p} index={i} slug={a.slug} />)}</div>
           <h2>Consejos para acertar</h2>
           <ul>{a.buyingTips.map((t) => <li key={t}>{t}</li>)}</ul>
           <h2>Preguntas frecuentes</h2>
@@ -86,10 +78,11 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
         </div>
       </div>
 
-      <section className="container pt-16">
+      <section className="container pt-16 pb-24 sm:pb-0">
         <h2 className="text-2xl font-extrabold tracking-tight mb-5">Te puede interesar</h2>
         <div className="grid sm:grid-cols-3 gap-5">{[...related, ...more].map((x) => <ArticleCard key={x.slug} a={x} />)}</div>
       </section>
+      <StickyBuy a={a} />
     </article>
   );
 }

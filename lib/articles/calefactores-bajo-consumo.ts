@@ -3,7 +3,7 @@ const a: Article = {
   slug: "mejores-calefactores-bajo-consumo",
   title: "Calefactores de bajo consumo: cuál elegir para este otoño sin disparar la factura",
   description: "Cerámico, radiador de aceite o panel: explicamos qué tipo de calefactor consume menos según la habitación y qué modelos comprar en 2026.",
-  category: "hogar",
+  category: "clima",
   date: "2026-09-12",
   readingMinutes: 9,
   intro: [

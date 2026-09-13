@@ -3,7 +3,7 @@ const a: Article = {
   slug: "mejores-purificadores-de-aire",
   title: "Los mejores purificadores de aire de 2026 para alergias, polvo y olores",
   description: "Cómo elegir purificador de aire con filtro HEPA según los metros de la estancia, con modelos de Levoit, AEG, Cecotec y Philips y el coste real de los filtros.",
-  category: "hogar",
+  category: "clima",
   date: "2026-08-27",
   readingMinutes: 9,
   intro: [

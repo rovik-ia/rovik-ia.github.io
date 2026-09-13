@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { articles } from "@/lib/articles";
 import ArticleCard from "@/components/ArticleCard";
@@ -20,6 +21,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ cat: 
   if (!c) notFound();
   const list = articles.filter((a) => a.category === cat);
   const cover = list[0];
+  const nProductos = list.reduce((n, a) => n + a.products.length, 0);
   return (
     <div>
       <header className="relative isolate bg-ink text-white overflow-hidden">
@@ -28,6 +30,9 @@ export default async function CategoryPage({ params }: { params: Promise<{ cat: 
         <div className="container relative py-16 sm:py-24">
           <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">{c.name}</h1>
           <p className="text-white/75 mt-3 text-lg">{c.description}</p>
+          <Link href={`/productos/?cat=${cat}`} className="inline-block mt-6 bg-accent-dark hover:bg-accent-deep text-white font-bold rounded-xl px-5 py-3">
+            Ver los {nProductos} productos de {c.name}
+          </Link>
         </div>
       </header>
       <div className="container pt-10">

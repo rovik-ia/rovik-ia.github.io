@@ -3,7 +3,7 @@ const a: Article = {
   slug: "mejores-deshumidificadores",
   title: "Los mejores deshumidificadores de 2026: cuántos litros necesitas y cuál comprar",
   description: "Cómo elegir deshumidificador para casa: capacidad real por habitación, ruido, consumo y drenaje, con los modelos de De'Longhi, Pro Breeze, Comfee y Cecotec que merecen la pena.",
-  category: "hogar",
+  category: "clima",
   date: "2026-09-04",
   readingMinutes: 9,
   intro: [

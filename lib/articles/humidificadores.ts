@@ -4,7 +4,7 @@ const a: Article = {
   title: "Los mejores humidificadores de 2026 para dormitorio, salón y bebés",
   description:
     "Guía para elegir humidificador: qué capacidad y tipo de niebla necesitas según la habitación, y qué modelos de Levoit, Xiaomi, Rowenta, Cecotec y Orbegozo merecen la pena.",
-  category: "hogar",
+  category: "clima",
   date: "2026-09-13",
   readingMinutes: 9,
   photoQuery: "humidifier bedroom mist",
