@@ -74,6 +74,35 @@ jobs:
           fi
           ls -lh marketing/videos/
 
+      - name: Publicar el vídeo como archivo público
+        id: archivo
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          V=$(ls marketing/videos/*.mp4 | head -1)
+          SLUG=$(basename "$V" .mp4)
+          TAG="video-$(date +%Y%m%d)-$SLUG"
+          gh release create "$TAG" "$V" --title "Vídeo $(date +%d/%m/%Y)" \
+            --notes "Vídeo vertical de la guía $SLUG." 2>/dev/null \
+            || gh release upload "$TAG" "$V" --clobber
+          echo "slug=$SLUG" >> $GITHUB_OUTPUT
+          echo "ruta=$V" >> $GITHUB_OUTPUT
+          echo "url=https://github.com/${{ github.repository }}/releases/download/$TAG/$SLUG.mp4" >> $GITHUB_OUTPUT
+
+      - name: Publicar en YouTube Shorts
+        env:
+          YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+          YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+          YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+          YOUTUBE_PRIVACIDAD: ${{ vars.YOUTUBE_PRIVACIDAD }}
+        run: python3 scripts/publish_youtube.py "${{ steps.archivo.outputs.ruta }}"
+
+      - name: Publicar en Instagram Reels
+        env:
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+        run: python3 scripts/publish_instagram.py "${{ steps.archivo.outputs.url }}" "${{ steps.archivo.outputs.slug }}"
+
       - name: Enviar el vídeo por Telegram
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
