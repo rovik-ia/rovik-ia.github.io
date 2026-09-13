@@ -13,6 +13,7 @@ Coste de funcionamiento: 0 €.
 | Recurso | Dirección |
 |---|---|
 | Web | https://rovik-ia.github.io |
+| Buscador de productos | https://rovik-ia.github.io/productos/ |
 | Repositorio | https://github.com/rovik-ia/rovik-ia.github.io |
 | Rutina diaria | https://claude.ai/code/routines/trig_01Mxz721FS9HeETi65eaTQav |
 | Panel de Amazon | https://afiliados.amazon.es/home/reports |
@@ -36,12 +37,25 @@ Identificador de afiliado: `tendenciato0a-21`.
 | Concepto | Valor |
 |---|---|
 | Guías publicadas | 12 |
+| Categorías | 5 (Hogar, Clima, Cocina, Bienestar, Tecnología) |
 | Productos con enlace de afiliado e imagen | 60 |
 | Vídeos generados | 12 |
 | Informes diarios | 2 |
 | Accesibilidad y SEO (Lighthouse móvil) | 100 / 100 |
 | Rendimiento (Lighthouse móvil) | 69 a 80 |
 | Coste mensual | 0 € |
+
+## Caminos hasta Amazon
+
+El enlace de afiliado es lo que genera el dinero, así que la web está organizada para llegar a él
+en el menor número de pasos posible.
+
+| Desde | Pasos hasta Amazon | Botones de compra en la página |
+|---|---|---|
+| Portada | 1 clic | 6 |
+| Buscador `/productos/` | 1 clic, con búsqueda por texto y categoría | 60 |
+| Cualquier guía | 1 clic, la tabla va antes del análisis | 11 |
+| Móvil, en cualquier guía | 1 toque en la barra fija inferior | siempre visible |
 
 ## Piezas técnicas
 
