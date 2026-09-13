@@ -44,3 +44,19 @@ Cómo activar:
 - No pujar por la marca "Amazon" ni enviar anuncios directamente a Amazon.es.
 - No usar imágenes de producto de Amazon fuera de sus herramientas oficiales.
 - El aviso de afiliado debe estar visible en cada página (ya está) y en los vídeos (está en el cierre y en el texto de la publicación).
+
+## 4. Aviso diario por WhatsApp
+
+`scripts/notify_whatsapp.py` lee el informe más reciente de `reports/` y envía un resumen por WhatsApp.
+Lo dispara solo el workflow `.github/workflows/notify-whatsapp.yml` cada vez que la rutina diaria sube un informe nuevo.
+
+Proveedores (se usa el primero configurado):
+- **CallMeBot** (gratuito, uso personal): secretos `WHATSAPP_PHONE` y `CALLMEBOT_APIKEY`.
+- **Twilio** (de pago, para volumen o uso comercial): `WHATSAPP_PHONE`, `TWILIO_SID`, `TWILIO_TOKEN`, `TWILIO_FROM`.
+
+Activar CallMeBot (solo lo puede hacer el titular del teléfono):
+1. Guardar en contactos el número +34 644 95 42 75.
+2. Enviarle por WhatsApp exactamente: `I allow callmebot to send me messages`
+3. Responde con la API key. Guardarla como secreto `CALLMEBOT_APIKEY` en GitHub y el teléfono con prefijo (+34…) como `WHATSAPP_PHONE`.
+
+Prueba local sin enviar nada: `python3 scripts/notify_whatsapp.py --dry-run`
