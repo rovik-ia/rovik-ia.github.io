@@ -1,4 +1,5 @@
 import type { Article } from "../types";
+import humidificadores from "./humidificadores";
 import sillas from "./sillas-de-escritorio-ergonomicas";
 import pistolas from "./pistolas-de-masaje";
 import freidoras from "./freidoras-de-aire";
@@ -12,7 +13,7 @@ import purificadores from "./purificadores-de-aire";
 import cepillos from "./cepillos-electricos";
 
 export const articles: Article[] = [
-  sillas, calefactores, pistolas, freidoras, robots, smartwatch, deshumidificadores, mantas, auriculares, purificadores, cepillos,
+  humidificadores, sillas, calefactores, pistolas, freidoras, robots, smartwatch, deshumidificadores, mantas, auriculares, purificadores, cepillos,
 ];
 
 export function getArticle(slug: string): Article | undefined {
