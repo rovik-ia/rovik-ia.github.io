@@ -8,6 +8,27 @@ Todo lo de esta carpeta se genera desde las guías (`npx tsx scripts/export-arti
 
 ## 1. Vídeos para redes (coste 0 €)
 
+**Se generan solos en la nube.** El workflow `.github/workflows/video-diario.yml` se dispara con cada guía nueva
+(`lib/articles/**`), crea el vídeo vertical de esa guía y lo envía por Telegram con el texto de publicación listo
+para copiar. También se puede lanzar a mano desde la pestaña Actions indicando un slug concreto.
+
+Para generarlos en local: `~/venv/bin/python scripts/make_videos.py [slug ...]` (sin argumentos, todas las guías;
+`--latest`, solo la más reciente).
+
+| Pieza | En la nube (Ubuntu) | En el Mac |
+|---|---|---|
+| Voz | edge-tts, `es-ES-ElviraNeural` | voz del sistema `say` si existe |
+| Tipografía | `assets/fonts/Manrope.ttf` (empaquetada, licencia OFL) | la misma |
+| Vídeo de fondo | Pexels, un clip distinto por escena | igual, con caché en `marketing/broll/` |
+| Montaje | ffmpeg de `imageio-ffmpeg` | el mismo |
+
+Variables para ajustar la voz: `TTS_ENGINE` (`say` o `edge`), `TTS_VOICE`, `TTS_RATE` (por defecto `+30%`,
+que deja los vídeos en torno a 45 segundos).
+
+Las consultas de vídeo de fondo salen de `BROLL_QUERIES` para las 11 guías originales y, para las nuevas,
+de los campos `photoQuery` e `imageQuery` que escribe la rutina diaria.
+
+
 `marketing/videos/<slug>.mp4` (vertical 1080x1920, 45-60 s, ~10 MB) y `<slug>.txt` con el texto de la publicación, hashtags y créditos de los clips. Cada vídeo combina B-roll de Pexels, tarjetas de producto, subtítulos sincronizados frase a frase, barra de progreso y voz "Mónica (Mejorada)" de macOS. Generar: `~/venv/bin/python scripts/make_videos.py [slug]` (necesita `PEXELS_API_KEY` en `.env.local`).
 Sube cada vídeo a TikTok, Instagram Reels y YouTube Shorts con el texto del `.txt`. Pon el enlace de la web en la bio de cada perfil.
 Los vídeos no usan imágenes de Amazon ni música con derechos. La licencia de Pexels permite el uso comercial; los créditos van en el texto de cada publicación.
