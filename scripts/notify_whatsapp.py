@@ -14,7 +14,7 @@ Uso:
 Las credenciales se leen de variables de entorno y, en local, de .env.local
 (ese archivo está ignorado por git y nunca se sube al repositorio).
 """
-import argparse, base64, glob, json, os, re, sys, urllib.error, urllib.parse, urllib.request, ssl
+import argparse, base64, glob, html, json, os, re, sys, urllib.error, urllib.parse, urllib.request, ssl
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 try:
@@ -85,19 +85,24 @@ def parse(path: str) -> dict:
     return {"date": date, "title": title, "url": url, "total": total, "sales": sales, "tips": tips}
 
 
-def build_message(d: dict) -> str:
+def build_message(d: dict, fmt: str = "plain") -> str:
+    """fmt='telegram' usa HTML (hay que escapar); el resto, texto plano."""
+    tg = fmt == "telegram"
+    esc = (lambda t: html.escape(str(t))) if tg else (lambda t: str(t))
+    bold = (lambda t: f"<b>{t}</b>") if tg else (lambda t: f"*{t}*")
+
     day, month, year = d["date"][8:10], d["date"][5:7], d["date"][:4]
     lines = [
-        f"*Tendencia Top* · {day}/{month}/{year}",
+        bold("Tendencia Top") + f" · {day}/{month}/{year}",
         "",
-        f"📄 Guía de hoy: {d['title']}" if d["title"] else "📄 Guía de hoy publicada",
-        d["url"],
+        "📄 Guía de hoy: " + esc(d["title"]) if d["title"] else "📄 Guía de hoy publicada",
+        esc(d["url"]),
         "",
-        f"📚 Total publicado: {d['total']} guías",
-        f"💶 Ventas: {d['sales']}",
+        f"📚 Total publicado: {esc(d['total'])} guías",
+        "💶 Ventas: " + esc(d["sales"]),
     ]
     if d["tips"]:
-        lines += ["", "🔜 Mañana: " + ", ".join(d["tips"][:2])]
+        lines += ["", "🔜 Mañana: " + esc(", ".join(d["tips"][:2]))]
     msg = "\n".join(lines)
     return msg if len(msg) <= MAX_LEN else msg[: MAX_LEN - 1] + "…"
 
@@ -134,9 +139,14 @@ def clean_param(text: str) -> str:
 
 def send_telegram(token: str, chat_id: str, msg: str) -> str:
     url = f"https://api.telegram.org/bot{token}/sendMessage"
-    data = urllib.parse.urlencode({"chat_id": chat_id, "text": msg}).encode()
-    with urllib.request.urlopen(urllib.request.Request(url, data=data), timeout=60, context=CTX) as r:
-        return r.read().decode("utf-8", "replace")[:300]
+    data = urllib.parse.urlencode(
+        {"chat_id": chat_id, "text": msg, "parse_mode": "HTML", "disable_web_page_preview": "false"}
+    ).encode()
+    try:
+        with urllib.request.urlopen(urllib.request.Request(url, data=data), timeout=60, context=CTX) as r:
+            return r.read().decode("utf-8", "replace")[:300]
+    except urllib.error.HTTPError as e:
+        return "ERROR Telegram: " + e.read().decode("utf-8", "replace")[:300]
 
 
 def send_callmebot(phone: str, key: str, msg: str) -> str:
@@ -173,17 +183,17 @@ def main() -> None:
     if args.dry_run:
         return
 
-    phone = env("WHATSAPP_PHONE") or ""
-    if not phone and not (env("TELEGRAM_TOKEN") and env("TELEGRAM_CHAT_ID")):
+    tg_token, tg_chat = env("TELEGRAM_TOKEN"), env("TELEGRAM_CHAT_ID")
+    phone = (env("WHATSAPP_PHONE") or "").strip()
+    if not phone and not (tg_token and tg_chat):
         print("AVISO: falta WHATSAPP_PHONE; no se envía nada.")
         return
-    if not phone.startswith("+"):
-        phone = "+" + phone.lstrip("00").lstrip()
+    if phone and not phone.startswith("+"):
+        phone = "+" + phone.lstrip("0")
 
     meta_token, meta_phone_id = env("META_TOKEN"), env("META_PHONE_ID")
     cmb = env("CALLMEBOT_APIKEY")
     sid, token, frm = env("TWILIO_SID"), env("TWILIO_TOKEN"), env("TWILIO_FROM")
-    tg_token, tg_chat = env("TELEGRAM_TOKEN"), env("TELEGRAM_CHAT_ID")
     if meta_token and meta_phone_id:
         print("enviando por WhatsApp Cloud API (Meta)…")
         print(send_meta(meta_token, meta_phone_id, phone, data, env("META_TEMPLATE") or "informe_diario"))
@@ -195,7 +205,7 @@ def main() -> None:
         print(send_twilio(sid, token, frm, phone, msg))
     elif tg_token and tg_chat:
         print("enviando por Telegram…")
-        print(send_telegram(tg_token, tg_chat, msg))
+        print(send_telegram(tg_token, tg_chat, build_message(data, "telegram")))
     else:
         print("AVISO: no hay proveedor configurado (META_*, CALLMEBOT_APIKEY, TWILIO_* o TELEGRAM_*); no se envía nada.")
 
