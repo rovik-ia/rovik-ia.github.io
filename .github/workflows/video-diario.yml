@@ -101,7 +101,7 @@ jobs:
         env:
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
-        run: python3 scripts/publish_instagram.py "${{ steps.archivo.outputs.url }}" "${{ steps.archivo.outputs.slug }}"
+        run: python3 scripts/publish_instagram.py "${{ steps.archivo.outputs.ruta }}" "${{ steps.archivo.outputs.slug }}" "${{ steps.archivo.outputs.url }}"
 
       - name: Enviar el vídeo por Telegram
         env:

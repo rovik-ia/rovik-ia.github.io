@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Publica un Reel en Instagram mediante la API oficial de Instagram Graph.
+"""Publica un Reel en Instagram con la API oficial de Instagram Graph.
 
-Uso: python3 scripts/publish_instagram.py <URL pública del mp4> <slug>
+Uso: python3 scripts/publish_instagram.py <ruta del mp4> <slug> [URL pública de respaldo]
 Credenciales (entorno o .env.local): IG_USER_ID, IG_ACCESS_TOKEN
 
-Instagram descarga el vídeo desde la URL, así que tiene que ser pública.
+Sube el archivo directamente (upload_type=resumable). Si esa vía falla y se ha
+indicado una URL pública, reintenta con el método clásico `video_url`.
 """
 import json, os, sys, time, urllib.error, urllib.parse, urllib.request
 
@@ -12,57 +13,101 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from social_common import CTX, env, instagram_caption, load_article
 
 API = "https://graph.facebook.com/v21.0"
-ESPERA_MAX = 600   # Instagram tarda en procesar el vídeo
+RUPLOAD = "https://rupload.facebook.com/ig-api-upload/v21.0"
+ESPERA_MAX = 900
 
 
 def pedir(url, datos=None):
     req = urllib.request.Request(url, data=urllib.parse.urlencode(datos).encode() if datos else None)
+    with urllib.request.urlopen(req, timeout=120, context=CTX) as r:
+        return json.load(r)
+
+
+def detalle(e):
     try:
-        with urllib.request.urlopen(req, timeout=120, context=CTX) as r:
-            return json.load(r)
-    except urllib.error.HTTPError as e:
-        detalle = e.read().decode("utf-8", "replace")[:600]
-        sys.exit(f"ERROR de Instagram: {detalle}")
+        return e.read().decode("utf-8", "replace")[:500]
+    except Exception:
+        return str(e)
+
+
+def crear_contenedor(uid, token, pie, resumable, video_url=None):
+    datos = {"media_type": "REELS", "caption": pie, "share_to_feed": "true", "access_token": token}
+    if resumable:
+        datos["upload_type"] = "resumable"
+    else:
+        datos["video_url"] = video_url
+    return pedir(f"{API}/{uid}/media", datos)["id"]
+
+
+def subir_archivo(contenedor, token, ruta):
+    datos = open(ruta, "rb").read()
+    req = urllib.request.Request(f"{RUPLOAD}/{contenedor}", data=datos, method="POST")
+    req.add_header("Authorization", "OAuth " + token)
+    req.add_header("offset", "0")
+    req.add_header("file_size", str(len(datos)))
+    req.add_header("Content-Type", "application/octet-stream")
+    with urllib.request.urlopen(req, timeout=900, context=CTX) as r:
+        return json.load(r)
+
+
+def esperar(contenedor, token):
+    transcurrido = 0
+    while transcurrido < ESPERA_MAX:
+        time.sleep(15)
+        transcurrido += 15
+        estado = pedir(f"{API}/{contenedor}?" + urllib.parse.urlencode(
+            {"fields": "status_code,status", "access_token": token}))
+        code = estado.get("status_code")
+        print(f"  procesando… {code} ({transcurrido}s)")
+        if code == "FINISHED":
+            return True
+        if code == "ERROR":
+            print("  Instagram rechazó el vídeo:", estado.get("status"))
+            return False
+    print("  Instagram no terminó de procesar a tiempo")
+    return False
 
 
 def main():
     if len(sys.argv) < 3:
-        sys.exit("Uso: publish_instagram.py <URL del mp4> <slug>")
-    video_url, slug = sys.argv[1], sys.argv[2]
+        sys.exit("Uso: publish_instagram.py <ruta del mp4> <slug> [URL pública]")
+    ruta, slug = sys.argv[1], sys.argv[2]
+    url_respaldo = sys.argv[3] if len(sys.argv) > 3 else None
 
     uid, token = env("IG_USER_ID"), env("IG_ACCESS_TOKEN")
     if not (uid and token):
         print("AVISO: faltan IG_USER_ID o IG_ACCESS_TOKEN; no se publica nada.")
         return
+    if not os.path.exists(ruta):
+        sys.exit(f"No existe {ruta}")
 
     pie = instagram_caption(load_article(slug))
-    print("creando el contenedor del Reel…")
-    r = pedir(f"{API}/{uid}/media", {"media_type": "REELS", "video_url": video_url,
-                                     "caption": pie, "share_to_feed": "true",
-                                     "access_token": token})
-    creacion = r["id"]
+    contenedor = None
 
-    esperado = 0
-    while esperado < ESPERA_MAX:
-        time.sleep(15)
-        esperado += 15
-        estado = pedir(f"{API}/{creacion}?" + urllib.parse.urlencode(
-            {"fields": "status_code,status", "access_token": token}))
-        code = estado.get("status_code")
-        print(f"  procesando… {code} ({esperado}s)")
-        if code == "FINISHED":
-            break
-        if code == "ERROR":
-            sys.exit(f"Instagram no pudo procesar el vídeo: {estado.get('status')}")
-    else:
-        sys.exit("Instagram no terminó de procesar el vídeo a tiempo")
+    try:
+        print("subiendo el archivo directamente a Instagram…")
+        contenedor = crear_contenedor(uid, token, pie, resumable=True)
+        subir_archivo(contenedor, token, ruta)
+    except urllib.error.HTTPError as e:
+        print("  la subida directa falló:", detalle(e))
+        contenedor = None
 
-    print("publicando…")
-    pub = pedir(f"{API}/{uid}/media_publish", {"creation_id": creacion, "access_token": token})
-    print("publicado, id:", pub.get("id"))
-    if os.environ.get("GITHUB_OUTPUT"):
-        with open(os.environ["GITHUB_OUTPUT"], "a") as f:
-            f.write(f"instagram_id={pub.get('id')}\n")
+    if contenedor is None or not esperar(contenedor, token):
+        if not url_respaldo:
+            sys.exit("No se pudo publicar en Instagram y no hay URL de respaldo")
+        print("reintentando con la URL pública…")
+        try:
+            contenedor = crear_contenedor(uid, token, pie, resumable=False, video_url=url_respaldo)
+        except urllib.error.HTTPError as e:
+            sys.exit("ERROR de Instagram: " + detalle(e))
+        if not esperar(contenedor, token):
+            sys.exit("Instagram no pudo procesar el vídeo por ninguna de las dos vías")
+
+    try:
+        pub = pedir(f"{API}/{uid}/media_publish", {"creation_id": contenedor, "access_token": token})
+    except urllib.error.HTTPError as e:
+        sys.exit("ERROR al publicar en Instagram: " + detalle(e))
+    print("publicado en Instagram, id:", pub.get("id"))
 
 
 if __name__ == "__main__":

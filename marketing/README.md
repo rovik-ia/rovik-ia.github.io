@@ -100,3 +100,37 @@ Informe completo en el repositorio del proyecto.
 6. Guardar `META_TOKEN`, `META_PHONE_ID` y `WHATSAPP_PHONE` como secretos del repositorio en *Settings → Secrets and variables → Actions*.
 
 Prueba local sin enviar nada: `python3 scripts/notify_whatsapp.py --dry-run`
+
+## 5. Publicación automática en YouTube Shorts e Instagram Reels
+
+El workflow `video-diario.yml` publica solo, después de generar el vídeo. Ambos pasos avisan y siguen
+adelante si faltan credenciales, así que el flujo nunca se rompe por esto.
+
+- **YouTube**: `scripts/publish_youtube.py`, API oficial YouTube Data v3, subida reanudable.
+  Secretos: `YOUTUBE_CLIENT_ID`, `YOUTUBE_CLIENT_SECRET`, `YOUTUBE_REFRESH_TOKEN`.
+  Variable opcional `YOUTUBE_PRIVACIDAD` (`public` por defecto, admite `unlisted` y `private`).
+  El enlace a la guía va en la descripción y **sí es pulsable**, con parámetros UTM para medir.
+- **Instagram**: `scripts/publish_instagram.py`, API oficial Instagram Graph.
+  Secretos: `IG_USER_ID`, `IG_ACCESS_TOKEN`. Sube el archivo directamente (`upload_type=resumable`)
+  y, si falla, reintenta con la URL pública del release. En Instagram los enlaces del pie **no son
+  pulsables**, así que el pie remite al enlace del perfil.
+
+### Alta de YouTube (una sola vez)
+
+1. En https://console.cloud.google.com crear un proyecto y activar **YouTube Data API v3**.
+2. Pantalla de consentimiento OAuth: tipo Externo, añadirse como usuario de prueba.
+3. Credenciales → Crear → **ID de cliente de OAuth** → tipo **Aplicación de escritorio**.
+4. En el Mac: `python3 scripts/youtube_oauth.py <CLIENT_ID> <CLIENT_SECRET>`, dar permiso en el
+   navegador y copiar el token de actualización que imprime.
+5. Guardar los tres valores como secretos del repositorio.
+
+### Alta de Instagram (una sola vez)
+
+1. La cuenta de Instagram debe ser **Empresa o Creador** y estar vinculada a una página de Facebook.
+2. En https://developers.facebook.com crear una app de tipo Empresa y añadir **Instagram Graph API**.
+3. Generar un token de larga duración con los permisos `instagram_basic`,
+   `instagram_content_publish` y `pages_show_list`.
+4. Obtener el identificador de la cuenta de Instagram (`IG_USER_ID`) y guardarlo junto al token.
+
+Límites que conviene saber: Instagram admite 50 publicaciones cada 24 horas; YouTube permite unas
+6 subidas al día con la cuota gratuita. Publicamos una al día, así que sobra margen.
