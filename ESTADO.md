@@ -50,8 +50,11 @@ Identificador de afiliado: `tendenciato0a-21`.
 Banner con propuesta clara ("Deja de comparar durante horas"), indicador de publicación diaria y
 cuatro señales de confianza construidas solo con datos reales y comprobables: sin patrocinios,
 número de guías y productos, fecha de la última actualización y aviso de que la comisión no
-encarece la compra. Debajo, una cinta en movimiento con los productos recomendados que se detiene
-al pasar el ratón y se convierte en una fila deslizable si el sistema pide menos movimiento.
+encarece la compra. El propio banner incluye la recomendación del día con su foto, su precio y un botón de compra
+directa en Amazon, con el aviso de enlace de afiliado justo debajo. Más abajo, una cinta en
+movimiento con los productos recomendados: cada tarjeta lleva directamente a Amazon y lo indica.
+La cinta se detiene al pasar el ratón y se convierte en una fila deslizable si el sistema pide
+menos movimiento.
 
 ## Caminos hasta Amazon
 
@@ -60,7 +63,7 @@ en el menor número de pasos posible.
 
 | Desde | Pasos hasta Amazon | Botones de compra en la página |
 |---|---|---|
-| Portada | 1 clic | 6 |
+| Portada | 0 clics: el botón está en el banner | 26 |
 | Buscador `/productos/` | 1 clic, con búsqueda por texto y categoría | 60 |
 | Cualquier guía | 1 clic, la tabla va antes del análisis | 11 |
 | Móvil, en cualquier guía | 1 toque en la barra fija inferior | siempre visible |
