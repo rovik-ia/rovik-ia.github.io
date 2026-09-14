@@ -1,6 +1,6 @@
 # Tendencia Top · estado del proyecto
 
-Última actualización: 14 de septiembre de 2026.
+Última actualización: 14 de septiembre de 2026, tarde.
 
 ## Qué es
 
@@ -36,11 +36,11 @@ Identificador de afiliado: `tendenciato0a-21`.
 
 | Concepto | Valor |
 |---|---|
-| Guías publicadas | 12 |
+| Guías publicadas | 13 |
 | Categorías | 5 (Hogar, Clima, Cocina, Bienestar, Tecnología) |
-| Productos con enlace de afiliado e imagen | 60 |
-| Vídeos generados | 12 |
-| Informes diarios | 2 |
+| Productos con enlace de afiliado e imagen | 65 |
+| Vídeos generados | 13 |
+| Informes diarios | 3 |
 | Accesibilidad y SEO (Lighthouse móvil) | 100 / 100 |
 | Rendimiento (Lighthouse móvil) | 69 a 80 |
 | Coste mensual | 0 € |
@@ -64,7 +64,7 @@ en el menor número de pasos posible.
 | Desde | Pasos hasta Amazon | Botones de compra en la página |
 |---|---|---|
 | Portada | 0 clics: el botón está en el banner | 26 |
-| Buscador `/productos/` | 1 clic, con búsqueda por texto y categoría | 60 |
+| Buscador `/productos/` | 1 clic, con búsqueda por texto y categoría | 65 |
 | Cualquier guía | 1 clic, la tabla va antes del análisis | 11 |
 | Móvil, en cualquier guía | 1 toque en la barra fija inferior | siempre visible |
 
@@ -124,6 +124,13 @@ en el menor número de pasos posible.
 - Tarea semanal que actualice la guía más antigua.
 - Conectar la API de productos de Amazon cuando aprueben la cuenta, para precios e imágenes oficiales.
 - Segunda red de afiliación para no depender solo de Amazon.
+
+## Última comprobación de la cadena automática
+
+El 14 de septiembre a las 06:05 la rutina publicó sola la guía 13 (básculas de cocina, categoría
+Cocina, elegida para equilibrar categorías) con sus 5 campos de imagen. Sin intervención: la web se
+desplegó, se generó el vídeo de 44,8 segundos, se envió a Telegram junto con el resumen, y YouTube e
+Instagram se saltaron limpiamente por no tener credenciales todavía.
 
 ## Cómo comprobar que sigue vivo
 
