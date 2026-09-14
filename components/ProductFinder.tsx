@@ -87,7 +87,7 @@ export default function ProductFinder({
               <div className="text-[11px] uppercase tracking-wider font-bold text-accent-dark">
                 {p.badge ?? p.categoryName}
               </div>
-              <h3 className="font-extrabold leading-snug">{p.name}</h3>
+              <h2 className="font-extrabold leading-snug">{p.name}</h2>
               <p className="text-sm text-muted">{p.pro}</p>
               <div className="text-sm mt-auto pt-2">
                 <span className="font-bold">{p.priceRange}</span>
