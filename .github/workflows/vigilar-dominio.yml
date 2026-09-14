@@ -1,0 +1,52 @@
+name: Vigilar el dominio propio
+
+# Comprueba cada 20 minutos si toptendencias.es ya está publicado y apunta a GitHub Pages.
+# Cuando lo detecta, avisa por Telegram y se desactiva solo. No cambia nada de la web.
+on:
+  schedule:
+    - cron: "*/20 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  vigilar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Comprobar si toptendencias.es apunta a GitHub
+        id: dns
+        run: |
+          python3 - <<'PY'
+          import os, socket
+          esperadas = {"185.199.108.153", "185.199.109.153", "185.199.110.153", "185.199.111.153"}
+          try:
+              ips = set(socket.gethostbyname_ex("toptendencias.es")[2])
+          except Exception as e:
+              ips = set()
+              print("Aún no resuelve:", e)
+          print("Direcciones encontradas:", sorted(ips) or "ninguna")
+          listo = bool(ips) and ips <= esperadas
+          print("Listo para activar:", "sí" if listo else "no")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write(f"listo={'si' if listo else 'no'}\n")
+          PY
+
+      - name: Avisar por Telegram
+        if: steps.dns.outputs.listo == 'si'
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
+            --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+            --data-urlencode "text=Tendencia Top: toptendencias.es ya está publicado y apunta a GitHub. Escribe a Claude: dominio publicado." > /dev/null
+
+      - name: Desactivar este vigilante
+        if: steps.dns.outputs.listo == 'si'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: gh workflow disable vigilar-dominio.yml --repo "$REPO"
