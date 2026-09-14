@@ -3,6 +3,8 @@ import { articles } from "@/lib/articles";
 import { allProducts, topPicks } from "@/lib/products";
 import ArticleCard from "@/components/ArticleCard";
 import BuyButton from "@/components/BuyButton";
+import Ticker from "@/components/Ticker";
+import TrustBar from "@/components/TrustBar";
 import Disclosure from "@/components/Disclosure";
 import { CATEGORIES } from "@/lib/site";
 
@@ -10,31 +12,49 @@ export default function Home() {
   const sorted = [...articles].sort((a, b) => (b.updated ?? b.date).localeCompare(a.updated ?? a.date));
   const [first, ...rest] = sorted;
   const destacados = topPicks().slice(0, 6);
-  const totalProductos = allProducts().length;
+  const productos = allProducts();
+  const totalProductos = productos.length;
+  const actualizado = new Date((first.updated ?? first.date) + "T00:00:00").toLocaleDateString("es-ES", {
+    day: "numeric", month: "long",
+  });
 
   return (
     <div>
       <section className="relative isolate overflow-hidden bg-ink text-white">
-        <img src="/img/_hero.jpg" srcSet="/img/_hero-800.jpg 800w, /img/_hero.jpg 1600w" sizes="100vw" alt="" fetchPriority="high" decoding="async" className="absolute inset-0 img-cover opacity-45" />
-        <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-ink/20" />
-        <div className="container relative py-20 sm:py-28 max-w-3xl">
-          <div className="text-[12px] uppercase tracking-[0.18em] font-bold text-orange-300 mb-4">Guías de compra independientes</div>
-          <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.05]">
-            Compra bien a la primera. <span className="text-accent">Sin listas infinitas.</span>
-          </h1>
-          <p className="text-white/75 mt-6 text-lg max-w-xl leading-relaxed">
-            Analizamos los productos más buscados en España y te llevamos directo al modelo que encaja contigo.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/productos/" className="bg-accent-dark hover:bg-accent-deep text-white font-bold rounded-xl px-5 py-3">
-              Buscar un producto
-            </Link>
-            <Link href="#guias" className="bg-white/10 hover:bg-white/15 text-white font-bold rounded-xl px-5 py-3">
-              Todas las guías de compra
-            </Link>
+        <img src="/img/_hero.jpg" srcSet="/img/_hero-800.jpg 800w, /img/_hero.jpg 1600w" sizes="100vw" alt="" fetchPriority="high" decoding="async" className="absolute inset-0 img-cover opacity-40" />
+        <div className="absolute inset-0 bg-gradient-to-br from-ink via-ink/85 to-ink/55" />
+        <div className="absolute -top-32 -right-24 w-[34rem] h-[34rem] rounded-full bg-accent/25 blur-3xl" aria-hidden />
+        <div className="container relative py-16 sm:py-24">
+          <div className="max-w-3xl">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-orange-200">
+              <span className="relative flex w-2 h-2">
+                <span className="absolute inline-flex w-full h-full rounded-full bg-orange-300 opacity-75 animate-ping" />
+                <span className="relative inline-flex w-2 h-2 rounded-full bg-orange-300" />
+              </span>
+              Una guía nueva cada día
+            </div>
+            <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.04] mt-6">
+              Deja de comparar durante horas.
+              <span className="block text-accent">Te decimos cuál comprar.</span>
+            </h1>
+            <p className="text-white/80 mt-6 text-lg max-w-xl leading-relaxed">
+              Guías de compra independientes de los productos más buscados en España. Elegimos con
+              criterios claros y te llevamos directo al modelo que encaja contigo.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/productos/" className="bg-accent-dark hover:bg-accent-deep text-white font-bold rounded-xl px-6 py-3.5 text-lg">
+                Buscar mi producto
+              </Link>
+              <Link href="#guias" className="bg-white/10 hover:bg-white/20 border border-white/15 text-white font-bold rounded-xl px-6 py-3.5 text-lg">
+                Ver las {articles.length} guías
+              </Link>
+            </div>
+            <TrustBar guias={articles.length} productos={totalProductos} actualizado={actualizado} />
           </div>
         </div>
       </section>
+
+      <Ticker productos={productos} />
 
       <div className="container -mt-6 relative"><Disclosure /></div>
 

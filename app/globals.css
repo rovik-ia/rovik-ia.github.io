@@ -37,3 +37,13 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-sans), u
 .prose li { margin: 0.3rem 0; }
 .card { background: var(--card); border: 1px solid var(--line); border-radius: 1.25rem; box-shadow: 0 1px 2px rgba(20,22,26,.04), 0 8px 24px -12px rgba(20,22,26,.12); }
 .img-cover { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* Cinta deslizante de productos */
+.marquee { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+.marquee-track { display: flex; width: max-content; animation: marquee 60s linear infinite; }
+.marquee:hover .marquee-track, .marquee:focus-within .marquee-track { animation-play-state: paused; }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) {
+  .marquee { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
+  .marquee-track { animation: none; }
+}
