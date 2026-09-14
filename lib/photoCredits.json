@@ -299,11 +299,36 @@
     "mejores-humidificadores-5": {
       "photographer": "Polina ⠀",
       "url": "https://www.pexels.com/photo/photo-of-a-woman-resting-6541195/"
+    },
+    "mejores-basculas-de-cocina-1": {
+      "photographer": "Gustavo Fring",
+      "url": "https://www.pexels.com/photo/vegetables-in-bowl-on-kitchen-scale-5622193/"
+    },
+    "mejores-basculas-de-cocina-2": {
+      "photographer": "Ron Lach",
+      "url": "https://www.pexels.com/photo/woman-mixing-baking-ingredients-in-a-bowl-8176598/"
+    },
+    "mejores-basculas-de-cocina-3": {
+      "photographer": "Ksenia Chernaya",
+      "url": "https://www.pexels.com/photo/a-person-weighing-the-ingredients-on-the-bowl-7299855/"
+    },
+    "mejores-basculas-de-cocina-4": {
+      "photographer": "LEONARDO VAZQUEZ",
+      "url": "https://www.pexels.com/photo/scales-with-berries-and-organic-ingredients-for-recipe-3743169/"
+    },
+    "mejores-basculas-de-cocina-5": {
+      "photographer": "Ron Lach",
+      "url": "https://www.pexels.com/photo/woman-cooking-in-kitchen-8176609/"
     }
   },
   "mejores-humidificadores": {
     "photographer": "cottonbro studio",
     "url": "https://www.pexels.com/photo/humidifier-in-a-room-6941312/",
     "photographer_url": "https://www.pexels.com/@cottonbro"
+  },
+  "mejores-basculas-de-cocina": {
+    "photographer": "Yan Krukau",
+    "url": "https://www.pexels.com/photo/close-up-shot-of-candle-wax-on-the-weighing-scale-7233971/",
+    "photographer_url": "https://www.pexels.com/@yankrukov"
   }
 }
