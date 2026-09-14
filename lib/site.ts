@@ -1,7 +1,9 @@
+import siteConfig from "../site.config.json";
+
 export const SITE = {
   name: "Tendencia Top",
   tagline: "Guías de compra de lo que está en tendencia",
-  url: "https://rovik-ia.github.io",
+  url: siteConfig.url.replace(/\/$/, ""),
   description:
     "Comparativas y guías de compra independientes de los productos más buscados en España: hogar, cocina, bienestar y tecnología.",
   email: "inforovik.ia@gmail.com",

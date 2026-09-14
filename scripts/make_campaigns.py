@@ -3,7 +3,7 @@
 import json, csv, os, re
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 arts = json.load(open(os.path.join(ROOT, "marketing/data/articles.json")))
-SITE = "https://rovik-ia.github.io"
+SITE = json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "site.config.json"), encoding="utf-8"))["url"].rstrip("/")
 DAILY_BUDGET_EUR = 5.00
 
 def clip(s, n):

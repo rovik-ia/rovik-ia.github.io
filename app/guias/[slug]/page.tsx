@@ -9,6 +9,7 @@ import ArticleCard, { formatDate } from "@/components/ArticleCard";
 import Disclosure from "@/components/Disclosure";
 import { CATEGORIES, SITE } from "@/lib/site";
 import credits from "@/lib/photoCredits.json";
+import { safeJsonLd } from "@/lib/jsonld";
 
 export function generateStaticParams() {
   return articles.map((a) => ({ slug: a.slug }));
@@ -45,8 +46,8 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
 
   return (
     <article>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(faqLd) }} />
       <header className="relative isolate bg-ink text-white overflow-hidden">
         <img src={`/img/guias/${a.slug}.jpg`} srcSet={`/img/guias/${a.slug}-800.jpg 800w, /img/guias/${a.slug}.jpg 1600w`} sizes="100vw" alt="" fetchPriority="high" decoding="async" className="absolute inset-0 img-cover opacity-50" />
         <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/60 to-ink/10" />

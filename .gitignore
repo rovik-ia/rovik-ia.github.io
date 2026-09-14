@@ -44,3 +44,9 @@ next-env.d.ts
 marketing/videos/*.mp4
 scripts/__pycache__/
 marketing/broll/
+
+# Datos privados: nunca al repositorio público
+reports/ventas/*
+!reports/ventas/.gitkeep
+ESTADO.md
+.claude/

@@ -75,7 +75,7 @@ Proveedores (se usa el primero configurado):
 - **WhatsApp Cloud API de Meta** (oficial y gratuito con número de prueba): `WHATSAPP_PHONE`, `META_TOKEN`, `META_PHONE_ID`, y variable `META_TEMPLATE` (por defecto `informe_diario`). **Opción recomendada.**
 - **CallMeBot** (gratuito pero de terceros): `WHATSAPP_PHONE` y `CALLMEBOT_APIKEY`. En septiembre de 2026 el bot estaba lleno y no admitía altas nuevas.
 - **Twilio** (de pago, proveedor oficial): `WHATSAPP_PHONE`, `TWILIO_SID`, `TWILIO_TOKEN`, `TWILIO_FROM`.
-- **Telegram** (ACTIVO desde el 14-09-2026): secretos `TELEGRAM_TOKEN` y `TELEGRAM_CHAT_ID`. Bot @Tendenciatop_informes_bot. Para obtener el chat_id: abrir el chat del bot, pulsar Empezar y ejecutar `python3 scripts/telegram_chat_id.py <TOKEN>`.
+- **Telegram** (ACTIVO desde el 14-09-2026): secretos `TELEGRAM_TOKEN` y `TELEGRAM_CHAT_ID`. Para obtener el chat_id: abrir el chat del bot, pulsar Empezar y ejecutar `python3 scripts/telegram_chat_id.py <TOKEN>`.
 
 ### Alta en WhatsApp Cloud API (la hace el titular de la cuenta de Meta)
 

@@ -23,18 +23,18 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with: { node-version: 22, cache: npm }
       - run: npm ci
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with: { python-version: "3.12" }
       - run: pip install --quiet pillow certifi imageio-ffmpeg edge-tts
 
       - name: Reutilizar el B-roll ya descargado
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: marketing/broll
           key: broll-${{ github.run_id }}
@@ -65,10 +65,12 @@ jobs:
         env:
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
           TTS_ENGINE: edge
+          SLUG_ENTRADA: ${{ inputs.slug }}
         run: |
           npx tsx scripts/export-articles.ts
-          if [ -n "${{ inputs.slug }}" ]; then
-            python3 scripts/make_videos.py "${{ inputs.slug }}"
+          if [ -n "$SLUG_ENTRADA" ]; then
+            case "$SLUG_ENTRADA" in (*[!a-z0-9-]*) echo "Slug no válido"; exit 1;; esac
+            python3 scripts/make_videos.py "$SLUG_ENTRADA"
           else
             python3 scripts/make_videos.py --latest
           fi
@@ -78,16 +80,18 @@ jobs:
         id: archivo
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
         run: |
           V=$(ls marketing/videos/*.mp4 | head -1)
           SLUG=$(basename "$V" .mp4)
+          case "$SLUG" in (""|*[!a-z0-9-]*) echo "Slug no válido: se detiene la publicación"; exit 1;; esac
           TAG="video-$(date +%Y%m%d)-$SLUG"
           gh release create "$TAG" "$V" --title "Vídeo $(date +%d/%m/%Y)" \
             --notes "Vídeo vertical de la guía $SLUG." 2>/dev/null \
             || gh release upload "$TAG" "$V" --clobber
           echo "slug=$SLUG" >> $GITHUB_OUTPUT
           echo "ruta=$V" >> $GITHUB_OUTPUT
-          echo "url=https://github.com/${{ github.repository }}/releases/download/$TAG/$SLUG.mp4" >> $GITHUB_OUTPUT
+          echo "url=https://github.com/$REPO/releases/download/$TAG/$SLUG.mp4" >> "$GITHUB_OUTPUT"
 
       - name: Publicar en YouTube Shorts
         env:
@@ -96,13 +100,17 @@ jobs:
           YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
           YOUTUBE_PRIVACIDAD: ${{ vars.YOUTUBE_PRIVACIDAD }}
           YOUTUBE_CHANNEL_ID: ${{ vars.YOUTUBE_CHANNEL_ID }}
-        run: python3 scripts/publish_youtube.py "${{ steps.archivo.outputs.ruta }}"
+          VIDEO_RUTA: ${{ steps.archivo.outputs.ruta }}
+        run: python3 scripts/publish_youtube.py "$VIDEO_RUTA"
 
       - name: Publicar en Instagram Reels
         env:
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
-        run: python3 scripts/publish_instagram.py "${{ steps.archivo.outputs.ruta }}" "${{ steps.archivo.outputs.slug }}" "${{ steps.archivo.outputs.url }}"
+          VIDEO_RUTA: ${{ steps.archivo.outputs.ruta }}
+          VIDEO_SLUG: ${{ steps.archivo.outputs.slug }}
+          VIDEO_URL: ${{ steps.archivo.outputs.url }}
+        run: python3 scripts/publish_instagram.py "$VIDEO_RUTA" "$VIDEO_SLUG" "$VIDEO_URL"
 
       - name: Enviar el vídeo por Telegram
         env:
@@ -113,7 +121,7 @@ jobs:
             python3 scripts/send_video_telegram.py "$v"
           done
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: video-${{ github.run_number }}
           path: marketing/videos/*

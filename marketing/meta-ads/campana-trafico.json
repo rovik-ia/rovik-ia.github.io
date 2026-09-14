@@ -8,6 +8,98 @@
   },
   "adsets": [
     {
+      "name": "Básculas de cocina digitales",
+      "daily_budget_eur": 3.0,
+      "status": "PAUSED",
+      "optimization_goal": "LANDING_PAGE_VIEWS",
+      "billing_event": "IMPRESSIONS",
+      "targeting": {
+        "geo_locations": {
+          "countries": [
+            "ES"
+          ]
+        },
+        "age_min": 25,
+        "age_max": 64,
+        "publisher_platforms": [
+          "facebook",
+          "instagram"
+        ],
+        "instagram_positions": [
+          "stream",
+          "reels",
+          "story"
+        ],
+        "facebook_positions": [
+          "feed",
+          "video_feeds",
+          "story",
+          "facebook_reels"
+        ],
+        "interests_hint": [
+          "básculas de cocina digitales",
+          "cocina",
+          "compras online"
+        ]
+      },
+      "ad": {
+        "name": "Las mejores básculas de cocina digitales de 2026 para cocinar y hacer reposterí…",
+        "format": "video",
+        "video_file": "marketing/videos/mejores-basculas-de-cocina.mp4",
+        "primary_text": "Guía para elegir báscula de cocina digital: qué precisión necesitas de verdad, qué capacidad conviene según el uso y qué mod…",
+        "headline": "Mejores básculas de cocina digitales 20…",
+        "description": "Guía de compra independiente",
+        "call_to_action": "LEARN_MORE",
+        "link": "https://rovik-ia.github.io/guias/mejores-basculas-de-cocina/?utm_source=meta&utm_medium=paid&utm_campaign=mejores-basculas-de-cocina"
+      }
+    },
+    {
+      "name": "Humidificadores",
+      "daily_budget_eur": 3.0,
+      "status": "PAUSED",
+      "optimization_goal": "LANDING_PAGE_VIEWS",
+      "billing_event": "IMPRESSIONS",
+      "targeting": {
+        "geo_locations": {
+          "countries": [
+            "ES"
+          ]
+        },
+        "age_min": 25,
+        "age_max": 64,
+        "publisher_platforms": [
+          "facebook",
+          "instagram"
+        ],
+        "instagram_positions": [
+          "stream",
+          "reels",
+          "story"
+        ],
+        "facebook_positions": [
+          "feed",
+          "video_feeds",
+          "story",
+          "facebook_reels"
+        ],
+        "interests_hint": [
+          "humidificadores",
+          "clima",
+          "compras online"
+        ]
+      },
+      "ad": {
+        "name": "Los mejores humidificadores de 2026 para dormitorio, salón y bebés",
+        "format": "video",
+        "video_file": "marketing/videos/mejores-humidificadores.mp4",
+        "primary_text": "Guía para elegir humidificador: qué capacidad y tipo de niebla necesitas según la habitación, y qué modelos de Levoit, Xiaom…",
+        "headline": "Mejores humidificadores 2026",
+        "description": "Guía de compra independiente",
+        "call_to_action": "LEARN_MORE",
+        "link": "https://rovik-ia.github.io/guias/mejores-humidificadores/?utm_source=meta&utm_medium=paid&utm_campaign=mejores-humidificadores"
+      }
+    },
+    {
       "name": "Sillas de escritorio ergonómicas",
       "daily_budget_eur": 3.0,
       "status": "PAUSED",
@@ -84,7 +176,7 @@
         ],
         "interests_hint": [
           "calefactores de bajo consumo: cuál elegir",
-          "hogar",
+          "clima",
           "compras online"
         ]
       },
@@ -314,7 +406,7 @@
         ],
         "interests_hint": [
           "deshumidificadores",
-          "hogar",
+          "clima",
           "compras online"
         ]
       },
@@ -452,7 +544,7 @@
         ],
         "interests_hint": [
           "purificadores de aire",
-          "hogar",
+          "clima",
           "compras online"
         ]
       },

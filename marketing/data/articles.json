@@ -1,5 +1,171 @@
 [
   {
+    "slug": "mejores-basculas-de-cocina",
+    "title": "Las mejores básculas de cocina digitales de 2026 para cocinar y hacer repostería con precisión",
+    "description": "Guía para elegir báscula de cocina digital: qué precisión necesitas de verdad, qué capacidad conviene según el uso y qué modelos de Cecotec, Tanita, Xiaomi, Ozeri y Renpho merecen la pena.",
+    "category": "cocina",
+    "date": "2026-09-14",
+    "readingMinutes": 9,
+    "photoQuery": "kitchen scale digital",
+    "intro": [
+      "Pesar los ingredientes con la vista o con vasos medidores es la causa más habitual de que un bizcocho no suba o de que una receta de pan no salga como en la foto. Una báscula de cocina digital cuesta poco, ocupa un cajón y elimina de un plumazo ese margen de error, además de ser mucho más cómoda para dietas o control de raciones que cualquier medida a ojo.",
+      "El problema no es encontrar una báscula, sino elegir entre las decenas de modelos casi idénticos que hay en Amazon.es. Aquí las diferencias reales están en la precisión al gramo, la capacidad máxima, si tiene función de tara con recipiente puesto y si el plato es apto para lavavajillas o hay que limpiarlo con cuidado alrededor de la pantalla."
+    ],
+    "quickPick": [
+      {
+        "label": "Mejor en general",
+        "product": "Cecotec Cook Control 9000 Waterproof"
+      },
+      {
+        "label": "Mejor precisión",
+        "product": "Tanita KD-192"
+      },
+      {
+        "label": "Diseño más cuidado",
+        "product": "Xiaomi Mijia Kitchen Scale"
+      },
+      {
+        "label": "Más compacta",
+        "product": "Ozeri Pronto Digital"
+      },
+      {
+        "label": "Para repostería y nutrición",
+        "product": "Renpho Báscula de Cocina Digital"
+      }
+    ],
+    "criteria": [
+      {
+        "title": "Precisión y capacidad",
+        "text": "Para uso diario basta con incrementos de 1 gramo y un máximo de 5 kg. Quien hace pan o repostería con regularidad agradece que la precisión se mantenga también en pesos muy pequeños, como la levadura o las especias."
+      },
+      {
+        "title": "Función tara",
+        "text": "Poder poner un bol encima, poner a cero y seguir añadiendo ingredientes es lo que marca la diferencia en el uso real. Comprueba que admita varias taras seguidas, no solo una."
+      },
+      {
+        "title": "Plataforma y limpieza",
+        "text": "Una superficie lisa de cristal o acero, sin ranuras alrededor de la pantalla, se limpia con un paño en segundos. Los modelos con botones físicos salientes acumulan más suciedad."
+      },
+      {
+        "title": "Alimentación y apagado automático",
+        "text": "Las de pilas duran más de un año con uso normal. El apagado automático a los pocos minutos es imprescindible para no quedarse sin batería a mitad de receta."
+      }
+    ],
+    "products": [
+      {
+        "name": "Cecotec Cook Control 9000 Waterproof",
+        "badge": "Mejor en general",
+        "priceRange": "15-25 €",
+        "searchQuery": "Cecotec Cook Control 9000 Waterproof báscula cocina",
+        "imageQuery": "digital kitchen scale bowl",
+        "summary": "El equilibrio más sensato entre precio, precisión y resistencia. Su superficie resistente al agua permite limpiarla bajo el grifo sin preocupación, algo poco habitual en esta franja de precio, y mantiene la precisión al gramo en pesos pequeños.",
+        "pros": [
+          "Superficie resistente al agua",
+          "Precisión constante en pesos pequeños",
+          "Pantalla grande y fácil de leer"
+        ],
+        "cons": [
+          "Diseño poco vistoso",
+          "El plato no se puede separar de la base para lavarlo aparte"
+        ],
+        "idealFor": "Uso diario de cocina general, desde pesar carne hasta harina."
+      },
+      {
+        "name": "Tanita KD-192",
+        "badge": "Mejor precisión",
+        "priceRange": "30-45 €",
+        "searchQuery": "Tanita KD-192 báscula cocina",
+        "imageQuery": "kitchen scale weighing flour",
+        "summary": "Tanita es una marca especializada en básculas y se nota en la estabilidad de la lectura: no oscila ni tarda en asentar el peso como ocurre en modelos genéricos. Es la opción para quien pesa con regularidad ingredientes delicados en repostería de precisión.",
+        "pros": [
+          "Lectura muy estable y fiable",
+          "Buena respuesta con pesos por debajo de 5 gramos",
+          "Construcción sólida"
+        ],
+        "cons": [
+          "Precio más alto que la media",
+          "Estética funcional, sin pretensiones"
+        ],
+        "idealFor": "Repostería habitual y quien ya ha tenido básculas imprecisas antes."
+      },
+      {
+        "name": "Xiaomi Mijia Kitchen Scale",
+        "badge": "Diseño",
+        "priceRange": "12-20 €",
+        "searchQuery": "Xiaomi Mijia Kitchen Scale báscula cocina",
+        "imageQuery": "minimalist kitchen scale white",
+        "summary": "Cuerpo minimalista, plataforma amplia y una relación precio-diseño difícil de igualar. Cumple bien en el uso diario sin sobrecargar de funciones, con una pantalla discreta que no desentona en cocinas cuidadas.",
+        "pros": [
+          "Diseño muy cuidado y compacto",
+          "Plataforma amplia para su tamaño",
+          "Precio ajustado"
+        ],
+        "cons": [
+          "Sin opciones de conectividad pese al nombre",
+          "Capacidad máxima algo justa para grandes cantidades"
+        ],
+        "idealFor": "Cocinas pequeñas donde el aspecto del electrodoméstico importa."
+      },
+      {
+        "name": "Ozeri Pronto Digital",
+        "badge": "Compacta",
+        "priceRange": "13-18 €",
+        "searchQuery": "Ozeri Pronto Digital báscula cocina",
+        "imageQuery": "compact kitchen scale food",
+        "summary": "Muy plana y ligera, pensada para guardarse en un cajón estrecho o llevarse de viaje. No es la más precisa de la lista, pero cumple sobradamente para pesar raciones o controlar cantidades sin ocupar espacio.",
+        "pros": [
+          "Muy fina y fácil de guardar",
+          "Enciende y pesa al instante",
+          "Precio bajo"
+        ],
+        "cons": [
+          "Menos estable con objetos irregulares",
+          "Plato pequeño para recipientes grandes"
+        ],
+        "idealFor": "Quien tiene poco espacio de almacenaje o quiere una báscula de apoyo."
+      },
+      {
+        "name": "Renpho Báscula de Cocina Digital",
+        "badge": "Repostería y nutrición",
+        "priceRange": "16-24 €",
+        "searchQuery": "Renpho báscula de cocina digital",
+        "imageQuery": "kitchen scale baking ingredients",
+        "summary": "Además de pesar, muestra de forma sencilla la información nutricional aproximada de alimentos básicos, algo útil para quien controla raciones o macronutrientes sin depender del móvil. El plato es amplio y admite bien recipientes de horno.",
+        "pros": [
+          "Referencia nutricional básica en pantalla",
+          "Plato amplio apto para moldes de horno",
+          "Tara rápida y fiable"
+        ],
+        "cons": [
+          "La base de datos nutricional es orientativa, no sustituye una app dedicada",
+          "Algo más grande para guardar que otras de la lista"
+        ],
+        "idealFor": "Quien cocina controlando raciones o sigue una dieta con macros."
+      }
+    ],
+    "buyingTips": [
+      "Si haces pan o repostería con frecuencia, prioriza la precisión en pesos pequeños sobre la capacidad máxima: rara vez se pesan más de 3 kg de una vez.",
+      "Comprueba el tamaño del plato antes de comprar: un bol de mezclar grande no cabe bien en las básculas más compactas.",
+      "Evita modelos con ranuras alrededor de la pantalla si sueles pesar líquidos o ingredientes húmedos; se acaban colando restos.",
+      "Las pilas suelen incluirse en la caja, pero conviene tener un par de repuesto porque el apagado automático no avisa de batería baja con antelación."
+    ],
+    "faq": [
+      {
+        "q": "¿Qué precisión necesito realmente?",
+        "a": "Para cocina general, 1 gramo es suficiente. Para repostería con levaduras, especias o recetas de precisión, conviene que la báscula responda bien también por debajo de ese umbral."
+      },
+      {
+        "q": "¿Merece la pena una báscula con conexión al móvil?",
+        "a": "Solo si vas a usar de verdad una app de nutrición o recetas. Para pesar ingredientes en el día a día, una báscula sencilla con tara y pantalla clara resuelve lo mismo sin depender del teléfono."
+      },
+      {
+        "q": "¿Cuánto duran las pilas?",
+        "a": "Con uso doméstico normal y apagado automático activo, entre uno y dos años. El consumo real depende más de cuánto tiempo se deja encendida cada vez que del modelo."
+      }
+    ],
+    "conclusion": "La Cecotec Cook Control 9000 Waterproof es la compra más razonable para el uso diario, sobre todo por poder limpiarla sin miedo al agua. Quien haga repostería con regularidad notará la diferencia de precisión en la Tanita KD-192, y para cocinas pequeñas o donde el aspecto importa, la Xiaomi Mijia Kitchen Scale es difícil de superar por precio y diseño."
+  },
+  {
     "slug": "mejores-humidificadores",
     "title": "Los mejores humidificadores de 2026 para dormitorio, salón y bebés",
     "description": "Guía para elegir humidificador: qué capacidad y tipo de niebla necesitas según la habitación, y qué modelos de Levoit, Xiaomi, Rowenta, Cecotec y Orbegozo merecen la pena.",

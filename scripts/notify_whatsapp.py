@@ -69,8 +69,8 @@ def parse(path: str) -> dict:
             title = " ".join(m.group(1).split())
     title = title.strip(" *")
 
-    m = re.search(r"https://rovik-ia\.github\.io/guias/[\w\-/]+", md)
-    url = m.group(0) if m else "https://rovik-ia.github.io/"
+    m = re.search(r"https?://[^\s)>\]]+/guias/[\w\-/]+", md)
+    url = m.group(0) if m else json.load(open(os.path.join(ROOT, "site.config.json"), encoding="utf-8"))["url"].rstrip("/") + "/"
 
     m = re.search(r"(\d+)\s+gu[íi]as", section(md, "Total de guías publicadas") or md)
     total = m.group(1) if m else "?"

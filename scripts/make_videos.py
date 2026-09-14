@@ -28,6 +28,9 @@ MAC_FONTS = {
     "reg": "/System/Library/Fonts/Supplemental/Arial.ttf",
 }
 VARIATIONS = {"black": "ExtraBold", "bold": "Bold", "reg": "Medium"}
+SITE_URL = json.load(open(os.path.join(ROOT, "site.config.json"), encoding="utf-8"))["url"].rstrip("/")
+SITE_HOST = urllib.parse.urlparse(SITE_URL).netloc
+SITE_SPOKEN = SITE_HOST.replace(".", " punto ").replace("-", " ")
 CATS = {"hogar": "Hogar", "cocina": "Cocina", "bienestar": "Bienestar", "tecnologia": "Tecnología"}
 
 def env(key):
@@ -224,7 +227,7 @@ def card_cta(a):
     img, d = base_layer()
     text_block(d, (60, 330), "La guía completa con enlaces está en", font("black", 64), FG + (255,), W - 120, lh=76, stroke=4, stroke_fill=(0, 0, 0, 210))
     d.rounded_rectangle([60, 560, W - 60, 700], radius=34, fill=ACCENT + (255,))
-    d.text((96, 596), "rovik-ia.github.io", font=font("black", 68), fill=FG + (255,))
+    d.text((96, 596), SITE_HOST, font=font("black", 68 if len(SITE_HOST) <= 20 else 56), fill=FG + (255,))
     y = 780
     for q in a["quickPick"][:5]:
         y = text_block(d, (60, y), f"{q['label']}: {q['product']}", font("bold", 38), FG + (255,), W - 120, lh=48, max_lines=2, stroke=3, stroke_fill=(0, 0, 0, 200)) + 10
@@ -324,7 +327,7 @@ def build(a):
     scenes.append((card_hook(a, topic), f"¿Qué {topic} comprar? Estos son los cinco que merecen la pena."))
     for i, p in enumerate(a["products"][:5], 1):
         scenes.append((card_product(i, p), f"Número {i}: {p['name']}. {p['pros'][0]}."))
-    scenes.append((card_cta(a), "Guía completa y enlaces en rovik-ia punto github punto io."))
+    scenes.append((card_cta(a), f"Guía completa y enlaces en {SITE_SPOKEN}."))
     clips = pick_clips(broll_queries(a), len(scenes))
     # audio primero para conocer duraciones
     audios = [scene_audio(nar, tmp, k) for k, (_, nar) in enumerate(scenes)]
@@ -342,7 +345,7 @@ def build(a):
     subprocess.run([FFMPEG, "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", lst, "-c", "copy", "-movflags", "+faststart", out], check=True)
     tags = "#" + " #".join([CATS.get(a["category"], "hogar").lower(), "guiadecompra", "amazon", "tendencias", "comprasinteligentes", topic.split()[0]])
     caption = (f"¿Qué {topic} comprar en 2026? Los 5 que merecen la pena:\n\n" + "\n".join(f"{i}. {p['name']} · {p.get('badge','')}" for i, p in enumerate(a['products'][:5], 1)) +
-               f"\n\nGuía completa y enlaces: https://rovik-ia.github.io/guias/{slug}/\n\n"
+               f"\n\nGuía completa y enlaces: {SITE_URL}/guias/{slug}/\n\n"
                "En calidad de Afiliado de Amazon, obtengo ingresos por las compras adscritas que cumplen los requisitos aplicables.\n\n" + tags +
                "\n\nCréditos de vídeo: " + " · ".join(credits))
     open(os.path.join(OUT, f"{slug}.txt"), "w").write(caption)

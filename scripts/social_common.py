@@ -4,7 +4,7 @@ import json, os, re, ssl, urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "marketing", "data", "articles.json")
-SITE = "https://rovik-ia.github.io"
+SITE = json.load(open(os.path.join(ROOT, "site.config.json"), encoding="utf-8"))["url"].rstrip("/")
 DISCLOSURE = ("En calidad de Afiliado de Amazon, obtengo ingresos por las compras "
               "adscritas que cumplen los requisitos aplicables.")
 CATS = {"hogar": "Hogar", "cocina": "Cocina", "bienestar": "Bienestar", "tecnologia": "Tecnología"}
