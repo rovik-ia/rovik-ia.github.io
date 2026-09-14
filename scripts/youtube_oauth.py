@@ -9,7 +9,8 @@ El token no se envía a ningún sitio: se imprime en tu terminal.
 """
 import http.server, json, socket, ssl, sys, threading, urllib.parse, urllib.request, webbrowser
 
-SCOPE = "https://www.googleapis.com/auth/youtube.upload"
+SCOPE = ("https://www.googleapis.com/auth/youtube.upload "
+         "https://www.googleapis.com/auth/youtube.readonly")
 try:
     import certifi
     CTX = ssl.create_default_context(cafile=certifi.where())
@@ -75,6 +76,19 @@ def main():
             urllib.request.Request("https://oauth2.googleapis.com/token", data=datos),
             timeout=60, context=CTX) as r:
         tok = json.load(r)
+
+    try:
+        req = urllib.request.Request(
+            "https://www.googleapis.com/youtube/v3/channels?part=snippet&mine=true",
+            headers={"Authorization": "Bearer " + tok["access_token"]})
+        with urllib.request.urlopen(req, timeout=60, context=CTX) as r:
+            canales = json.load(r).get("items", [])
+        for c in canales:
+            print(f"\nCanal autorizado: {c['snippet']['title']} ({c['snippet'].get('customUrl', '')}) · id {c['id']}")
+        if not canales:
+            print("\nAVISO: esta cuenta no tiene canal de YouTube. Crea el canal y repite.")
+    except Exception as e:
+        print("\nNo se pudo leer el canal autorizado:", e)
 
     if "refresh_token" not in tok:
         sys.exit("Google no devolvió token de actualización. Revoca el acceso de la app en "

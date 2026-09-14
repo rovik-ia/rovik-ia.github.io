@@ -95,6 +95,7 @@ jobs:
           YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
           YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
           YOUTUBE_PRIVACIDAD: ${{ vars.YOUTUBE_PRIVACIDAD }}
+          YOUTUBE_CHANNEL_ID: ${{ vars.YOUTUBE_CHANNEL_ID }}
         run: python3 scripts/publish_youtube.py "${{ steps.archivo.outputs.ruta }}"
 
       - name: Publicar en Instagram Reels

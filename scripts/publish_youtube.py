@@ -33,8 +33,29 @@ def access_token():
         sys.exit("ERROR al renovar el token de YouTube: " + e.read().decode("utf-8", "replace")[:400])
 
 
+def canal_autorizado(token):
+    req = urllib.request.Request(
+        "https://www.googleapis.com/youtube/v3/channels?part=snippet&mine=true",
+        headers={"Authorization": "Bearer " + token})
+    try:
+        with urllib.request.urlopen(req, timeout=60, context=CTX) as r:
+            items = json.load(r).get("items", [])
+    except urllib.error.HTTPError as e:
+        sys.exit("ERROR al comprobar el canal de YouTube: " + e.read().decode("utf-8", "replace")[:400])
+    return items[0] if items else None
+
+
 def subir(video, titulo, descripcion, etiquetas, privacidad):
     token = access_token()
+    esperado = env("YOUTUBE_CHANNEL_ID")
+    canal = canal_autorizado(token)
+    if canal is None:
+        sys.exit("ERROR: la cuenta autorizada no tiene canal de YouTube")
+    nombre = f"{canal['snippet']['title']} ({canal['snippet'].get('customUrl', '')})"
+    if esperado and canal["id"] != esperado:
+        sys.exit(f"BLOQUEADO: el token pertenece al canal {nombre}, no al canal configurado. "
+                 "No se sube nada. Repite scripts/youtube_oauth.py eligiendo el canal correcto.")
+    print(f"canal verificado: {nombre}")
     cuerpo = json.dumps({
         "snippet": {"title": titulo, "description": descripcion, "tags": etiquetas,
                     "categoryId": "26", "defaultLanguage": "es", "defaultAudioLanguage": "es"},

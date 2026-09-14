@@ -96,7 +96,7 @@ en el menor número de pasos posible.
 |---|---|
 | Web y guías | Funcionando y verificado |
 | Telegram (informe y vídeo) | Funcionando y verificado |
-| YouTube Shorts | Código listo y probado. Faltan credenciales |
+| YouTube Shorts | Código listo y probado. Canal fijado: MR ROVIK (@MRROVIK-h1e). Faltan credenciales |
 | Instagram Reels | Código listo y probado. Faltan credenciales |
 | Google Ads | Campaña preparada. Sin activar, requiere inversión |
 | Meta Ads | Plan preparado. Sin activar, requiere inversión |
@@ -105,10 +105,12 @@ en el menor número de pasos posible.
 
 **Del usuario**
 
-1. Alta de YouTube: proyecto en Google Cloud con YouTube Data API v3, pantalla de consentimiento
-   **publicada en producción** (si se queda en Pruebas el permiso caduca cada 7 días), credencial
-   de tipo Aplicación de escritorio y ejecutar una vez
-   `~/venv/bin/python scripts/youtube_oauth.py CLIENT_ID CLIENT_SECRET`.
+1. Alta de YouTube en el canal **MR ROVIK** (@MRROVIK-h1e, id `UCtmLUdN4_Aq4K9E4TYU_Aeg`, ya
+   guardado como variable del repositorio). API YouTube Data v3 ya activada. Falta: pantalla de
+   consentimiento **publicada en producción** (si se queda en Pruebas el permiso caduca cada 7 días),
+   credencial de tipo Aplicación de escritorio y ejecutar una vez
+   `~/venv/bin/python scripts/youtube_oauth.py CLIENT_ID CLIENT_SECRET` eligiendo ese canal.
+   La subida se bloquea sola si el token pertenece a otro canal.
 2. Alta de Instagram: cuenta Empresa o Creador vinculada a una página de Facebook, app en Meta con
    Instagram Graph API y token de larga duración. Poner la dirección de la web en la biografía.
 3. Conseguir 3 ventas antes de marzo de 2027 o Amazon cierra la cuenta de afiliado.

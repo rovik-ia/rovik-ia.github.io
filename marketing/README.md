@@ -109,6 +109,9 @@ adelante si faltan credenciales, así que el flujo nunca se rompe por esto.
 - **YouTube**: `scripts/publish_youtube.py`, API oficial YouTube Data v3, subida reanudable.
   Secretos: `YOUTUBE_CLIENT_ID`, `YOUTUBE_CLIENT_SECRET`, `YOUTUBE_REFRESH_TOKEN`.
   Variable opcional `YOUTUBE_PRIVACIDAD` (`public` por defecto, admite `unlisted` y `private`).
+  Variable `YOUTUBE_CHANNEL_ID` = `UCtmLUdN4_Aq4K9E4TYU_Aeg` (canal **MR ROVIK**, @MRROVIK-h1e).
+  **Bloqueo de seguridad:** antes de subir, el script consulta qué canal ha autorizado el token y
+  aborta sin subir nada si no coincide con ese identificador.
   El enlace a la guía va en la descripción y **sí es pulsable**, con parámetros UTM para medir.
 - **Instagram**: `scripts/publish_instagram.py`, API oficial Instagram Graph.
   Secretos: `IG_USER_ID`, `IG_ACCESS_TOKEN`. Sube el archivo directamente (`upload_type=resumable`)
@@ -120,9 +123,13 @@ adelante si faltan credenciales, así que el flujo nunca se rompe por esto.
 1. En https://console.cloud.google.com crear un proyecto y activar **YouTube Data API v3**.
 2. Pantalla de consentimiento OAuth: tipo Externo, añadirse como usuario de prueba.
 3. Credenciales → Crear → **ID de cliente de OAuth** → tipo **Aplicación de escritorio**.
-4. En el Mac: `python3 scripts/youtube_oauth.py <CLIENT_ID> <CLIENT_SECRET>`, dar permiso en el
-   navegador y copiar el token de actualización que imprime.
-5. Guardar los tres valores como secretos del repositorio.
+4. **Publicar** la pantalla de consentimiento (estado En producción). En modo Pruebas el token
+   caduca cada 7 días.
+5. En el Mac: `~/venv/bin/python scripts/youtube_oauth.py <CLIENT_ID> <CLIENT_SECRET>`, elegir la
+   cuenta y el canal **MR ROVIK** en el navegador y copiar el token que imprime. El script muestra
+   el canal autorizado para confirmar que es el correcto. Pide permiso de subida y de solo lectura
+   (la lectura sirve únicamente para comprobar el canal).
+6. Guardar los tres valores como secretos del repositorio.
 
 ### Alta de Instagram (una sola vez)
 
