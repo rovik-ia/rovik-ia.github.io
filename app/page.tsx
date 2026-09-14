@@ -11,7 +11,9 @@ import { CATEGORIES } from "@/lib/site";
 export default function Home() {
   const sorted = [...articles].sort((a, b) => (b.updated ?? b.date).localeCompare(a.updated ?? a.date));
   const [first, ...rest] = sorted;
-  const destacados = topPicks().slice(0, 6);
+  const picks = topPicks();
+  const estrella = picks[0];
+  const destacados = picks.slice(1, 7);
   const productos = allProducts();
   const totalProductos = productos.length;
   const actualizado = new Date((first.updated ?? first.date) + "T00:00:00").toLocaleDateString("es-ES", {
@@ -25,6 +27,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-br from-ink via-ink/85 to-ink/55" />
         <div className="absolute -top-32 -right-24 w-[34rem] h-[34rem] rounded-full bg-accent/25 blur-3xl" aria-hidden />
         <div className="container relative py-16 sm:py-24">
+          <div className="grid lg:grid-cols-[1.15fr_minmax(0,22rem)] gap-10 lg:gap-12 items-center">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-orange-200">
               <span className="relative flex w-2 h-2">
@@ -50,6 +53,40 @@ export default function Home() {
               </Link>
             </div>
             <TrustBar guias={articles.length} productos={totalProductos} actualizado={actualizado} />
+          </div>
+
+          <aside className="card overflow-hidden text-fg">
+            <div className="bg-accent-dark text-white px-4 py-2 text-xs font-bold uppercase tracking-[0.14em]">
+              La recomendación de hoy
+            </div>
+            <a
+              href={estrella.href}
+              target="_blank"
+              rel="nofollow sponsored noopener"
+              className="block aspect-[16/10] bg-line overflow-hidden"
+              aria-hidden
+              tabIndex={-1}
+            >
+              <img src={estrella.img} alt="" className="img-cover" />
+            </a>
+            <div className="p-5">
+              <div className="text-[11px] uppercase tracking-wider font-bold text-accent-dark">
+                {estrella.badge ?? estrella.categoryName} · {estrella.topic}
+              </div>
+              <div className="font-extrabold text-xl leading-snug mt-1">{estrella.name}</div>
+              <p className="text-sm text-muted mt-1.5">{estrella.pro}</p>
+              <div className="font-bold mt-3">{estrella.priceRange}</div>
+              <div className="mt-3">
+                <BuyButton href={estrella.href} label="Ver precio en Amazon" />
+              </div>
+              <p className="text-[11px] text-muted mt-2.5 leading-snug">
+                Enlace de afiliado. El precio que pagas es el mismo.
+              </p>
+              <Link href={estrella.guideUrl} className="block text-xs text-muted underline underline-offset-4 hover:text-fg mt-2">
+                Ver por qué y con qué lo hemos comparado
+              </Link>
+            </div>
+          </aside>
           </div>
         </div>
       </section>
