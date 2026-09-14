@@ -45,6 +45,14 @@ Identificador de afiliado: `tendenciato0a-21`.
 | Rendimiento (Lighthouse móvil) | 69 a 80 |
 | Coste mensual | 0 € |
 
+## Portada
+
+Banner con propuesta clara ("Deja de comparar durante horas"), indicador de publicación diaria y
+cuatro señales de confianza construidas solo con datos reales y comprobables: sin patrocinios,
+número de guías y productos, fecha de la última actualización y aviso de que la comisión no
+encarece la compra. Debajo, una cinta en movimiento con los productos recomendados que se detiene
+al pasar el ratón y se convierte en una fila deslizable si el sistema pide menos movimiento.
+
 ## Caminos hasta Amazon
 
 El enlace de afiliado es lo que genera el dinero, así que la web está organizada para llegar a él
