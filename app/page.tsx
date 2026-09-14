@@ -71,7 +71,7 @@ export default function Home() {
         <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {destacados.map((p) => (
             <li key={p.key} className="card overflow-hidden flex flex-col">
-              <Link href={p.guideUrl} className="block aspect-[16/10] bg-line overflow-hidden">
+              <Link href={p.guideUrl} aria-hidden tabIndex={-1} className="block aspect-[16/10] bg-line overflow-hidden">
                 <img src={p.img} alt="" loading="lazy" className="img-cover" />
               </Link>
               <div className="p-4 flex flex-col gap-2 flex-1">

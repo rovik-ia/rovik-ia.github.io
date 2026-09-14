@@ -14,7 +14,7 @@ export default function QuickCompare({ a }: { a: Article }) {
       <ul className="mt-4 divide-y divide-line">
         {a.products.map((p, i) => (
           <li key={p.name} className="py-4 flex flex-wrap items-center gap-x-4 gap-y-3">
-            <Link href={`#producto-${i + 1}`} className="shrink-0">
+            <Link href={`#producto-${i + 1}`} aria-label={`Ver el análisis de ${p.name}`} className="shrink-0">
               <img
                 src={`/img/productos/${a.slug}-${i + 1}.jpg`}
                 alt=""
