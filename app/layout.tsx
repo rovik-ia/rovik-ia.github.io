@@ -14,6 +14,7 @@ export const metadata: Metadata = {
   description: SITE.description,
   openGraph: { type: "website", locale: SITE.locale, siteName: SITE.name, images: ["/img/_hero.jpg"] },
   robots: { index: true, follow: true },
+  ...(SITE.googleSiteVerification ? { verification: { google: SITE.googleSiteVerification } } : {}),
   alternates: { types: { "application/rss+xml": "/feed.xml" } },
 };
 

@@ -55,6 +55,7 @@ def main():
         sys.exit("No existe out/: ejecuta antes npm run build")
     paginas = sorted(glob.glob(os.path.join(OUT, "**", "*.html"), recursive=True))
     total = 0
+    sin_cabecera = []
     for ruta in paginas:
         html = open(ruta, encoding="utf-8").read()
         html = META_CSP.sub("", META_REF.sub("", html))
@@ -64,7 +65,8 @@ def main():
                  '<meta name="referrer" content="strict-origin-when-cross-origin"/>')
         m = re.search(r'<meta charSet="utf-8"\s*/?>', html, re.I) or re.search(r"<head[^>]*>", html, re.I)
         if not m:
-            sys.exit(f"Sin <head> en {ruta}")
+            sin_cabecera.append(os.path.relpath(ruta, OUT))
+            continue
         html = html[:m.end()] + metas + html[m.end():]
         open(ruta, "w", encoding="utf-8").write(html)
 
@@ -78,7 +80,9 @@ def main():
         if os.path.exists(cname):
             os.remove(cname)
         estado = "sin CNAME (dominio de GitHub)"
-    print(f"CSP aplicada a {len(paginas)} páginas, {total} scripts en línea autorizados por huella · {estado}")
+    if sin_cabecera:
+        print("Sin cabecera HTML, se dejan intactos:", ", ".join(sin_cabecera))
+    print(f"CSP aplicada a {len(paginas) - len(sin_cabecera)} páginas, {total} scripts en línea autorizados por huella · {estado}")
 
 
 if __name__ == "__main__":

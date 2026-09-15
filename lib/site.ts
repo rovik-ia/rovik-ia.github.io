@@ -4,6 +4,7 @@ export const SITE = {
   name: "Tendencia Top",
   tagline: "Guías de compra de lo que está en tendencia",
   url: siteConfig.url.replace(/\/$/, ""),
+  googleSiteVerification: (siteConfig as { googleSiteVerification?: string }).googleSiteVerification ?? "",
   description:
     "Comparativas y guías de compra independientes de los productos más buscados en España: hogar, cocina, bienestar y tecnología.",
   email: "inforovik.ia@gmail.com",
