@@ -17,7 +17,8 @@ npm run dev          # desarrollo en http://localhost:3000
 npm run lint         # ESLint
 npm run typecheck    # TypeScript
 npm run build        # exporta a out/ y endurece (CSP por huella, cabeceras, security.txt)
-npm test             # Playwright + axe en 375, 390, 768, 1024 y 1440 px (sirve out/)
+npm test             # Playwright + axe en 375, 390, 768, 1024 y 1440 px (sirve out/) + pruebas unitarias
+npm run test:ads     # compila con formulario y medición de prueba y verifica consentimiento, CSP y conversiones
 node scripts/serve.mjs 4173   # servir out/ en local (HEADERS=1 añade las cabeceras de seguridad)
 node scripts/preview/build-preview.mjs /ruta   # vista previa que funciona servida desde cualquier subruta
 ```
@@ -30,12 +31,35 @@ node scripts/render/og.mjs     # imagen para redes sociales public/og.jpg
 node scripts/qa/shoot.mjs http://localhost:4173/ capturas top,protocolo+900 390,1440
 ```
 
+## Formulario y medición (opcionales)
+
+Por defecto la web no usa cookies ni servicios externos y el formulario abre el correo del visitante. Para campañas se
+activan con variables de entorno en la plataforma de publicación (o en `site.config.json` → `form` y `tracking`):
+
+| Variable | Para qué |
+| --- | --- |
+| `NEXT_PUBLIC_FORM_PROVIDER` | `formspree`, `web3forms` o `generic` (endpoint propio https) |
+| `NEXT_PUBLIC_FORM_ENDPOINT` | URL del formulario (Formspree: `https://formspree.io/f/xxxx`) |
+| `NEXT_PUBLIC_FORM_ACCESS_KEY` | Clave pública de Web3Forms |
+| `NEXT_PUBLIC_GOOGLE_ADS_ID` · `NEXT_PUBLIC_GOOGLE_ADS_LEAD_LABEL` | Conversión «Envío de formulario» de Google Ads |
+| `NEXT_PUBLIC_GA4_ID` | Google Analytics 4 |
+| `NEXT_PUBLIC_META_PIXEL_ID` | Píxel de Meta |
+
+Con medición activa aparece un aviso de cookies (aceptar y rechazar al mismo nivel) y no se carga nada de terceros hasta
+aceptar. Las políticas de cookies y privacidad y la CSP se ajustan solas a lo que esté activo. Los valores mal formados se
+ignoran con aviso al compilar. `npm run test:ads` compila con IDs de prueba y verifica todo esto.
+
+Plan de campaña y kit de Google Ads: `marketing/PLAN-CAMPANAS.md` y `marketing/google-ads/`.
+
 ## Dónde se edita cada cosa
 
 | Qué | Dónde |
 | --- | --- |
 | Dominio, correo, WhatsApp y datos legales del titular | `site.config.json` |
 | Textos de todas las secciones (promesas comerciales incluidas) | `lib/content.ts` |
+| Página de campaña para construcción (debe coincidir con los anuncios) | `lib/content-construccion.ts` |
+| Calculadora de fugas | `lib/calculator.ts` |
+| Envío de solicitudes y medición | `lib/lead.ts`, `lib/analytics.ts`, `scripts/integrations.mjs` |
 | Preguntas, puntuación y plan del escáner ROVIK.IA | `lib/diagnosis.ts` |
 | Escena 3D (piezas, materiales, fases de ensamblaje) | `lib/core/scene.ts` |
 | Colores, tipografía y componentes base | `app/globals.css` |

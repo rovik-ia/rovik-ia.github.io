@@ -51,3 +51,28 @@ export function homeGraph() {
     ],
   };
 }
+
+export function constructionGraph(items: { q: string; a: string }[], name: string, description: string) {
+  const url = `${SITE.url}/constructoras/`;
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Service",
+        "@id": `${url}#servicio`,
+        name,
+        description,
+        serviceType: "Digitalización de partes y albaranes de obra y control de horas",
+        areaServed: { "@type": "Country", name: "España" },
+        audience: { "@type": "BusinessAudience", audienceType: "Constructoras y subcontratas" },
+        provider: { "@id": `${SITE.url}/#organizacion` },
+        url,
+      },
+      {
+        "@type": "FAQPage",
+        "@id": `${url}#faq`,
+        mainEntity: items.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+      },
+    ],
+  };
+}

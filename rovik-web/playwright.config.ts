@@ -36,10 +36,11 @@ export default defineConfig({
     env: { HEADERS: "1" },
   },
   projects: [
-    { name: "movil-375", use: { ...devices["iPhone SE"], browserName: "chromium", viewport: { width: 375, height: 667 } } },
-    { name: "movil-390", use: { ...devices["iPhone 13"], browserName: "chromium", viewport: { width: 390, height: 844 } } },
-    { name: "tableta-768", use: { browserName: "chromium", viewport: { width: 768, height: 1024 }, hasTouch: true } },
-    { name: "portatil-1024", use: { browserName: "chromium", viewport: { width: 1024, height: 768 } } },
-    { name: "escritorio-1440", use: { browserName: "chromium", viewport: { width: 1440, height: 900 } } },
+    { name: "unit", testMatch: /unit\.spec\.ts/ },
+    { name: "movil-375", use: { ...devices["iPhone SE"], browserName: "chromium", viewport: { width: 375, height: 667 } }, testIgnore: /unit\.spec\.ts/ },
+    { name: "movil-390", use: { ...devices["iPhone 13"], browserName: "chromium", viewport: { width: 390, height: 844 } }, testIgnore: /unit\.spec\.ts/ },
+    { name: "tableta-768", use: { browserName: "chromium", viewport: { width: 768, height: 1024 }, hasTouch: true }, testIgnore: /unit\.spec\.ts/ },
+    { name: "portatil-1024", use: { browserName: "chromium", viewport: { width: 1024, height: 768 } }, testIgnore: /unit\.spec\.ts/ },
+    { name: "escritorio-1440", use: { browserName: "chromium", viewport: { width: 1440, height: 900 } }, testIgnore: /unit\.spec\.ts/ },
   ],
 });

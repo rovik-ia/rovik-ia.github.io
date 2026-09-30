@@ -5,6 +5,8 @@ import { SITE, asset } from "@/lib/site";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import RevealObserver from "@/components/ui/RevealObserver";
+import ConsentBanner from "@/components/consent/ConsentBanner";
+import MobileCta from "@/components/layout/MobileCta";
 
 const archivo = Archivo({
   subsets: ["latin"],
@@ -70,6 +72,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </main>
         <Footer />
+        <MobileCta />
+        <ConsentBanner />
         <RevealObserver />
       </body>
     </html>

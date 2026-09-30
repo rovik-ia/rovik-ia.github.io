@@ -6,5 +6,16 @@
     "holder": "",
     "nif": "",
     "address": ""
+  },
+  "form": {
+    "provider": "",
+    "endpoint": "",
+    "accessKey": ""
+  },
+  "tracking": {
+    "ga4": "",
+    "googleAds": "",
+    "googleAdsLeadLabel": "",
+    "metaPixel": ""
   }
 }

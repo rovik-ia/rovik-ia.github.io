@@ -1,7 +1,7 @@
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
-const PAGES = ["/", "/aviso-legal/", "/privacidad/", "/cookies/"];
+const PAGES = ["/", "/constructoras/", "/aviso-legal/", "/privacidad/", "/cookies/"];
 
 /** Simula una GPU real: en CI Chromium renderiza WebGL por software y la web sirve imágenes estáticas. */
 async function fakeGpu(page: Page) {
@@ -183,9 +183,13 @@ test.describe("Recorridos de conversión", () => {
     }
     await expect(page.getByRole("heading", { name: "Informe de escaneo" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Informe de escaneo" })).toBeFocused();
-    const mail = page.getByRole("link", { name: /Enviar informe a Rovik/ });
+    const mail = page.locator("#rovik-ia").getByRole("link", { name: "por correo" });
     await expect(mail).toHaveAttribute("href", /^mailto:inforovik\.ia@gmail\.com\?subject=Informe/);
     await expect(page.locator("#rovik-ia")).toContainText("Plan de 30 días");
+    // El informe pasa al formulario de contacto para pedir la sesión
+    await page.getByRole("button", { name: /Revisar mi informe con Rovik/ }).click();
+    await expect(page.locator("#f-mensaje")).toHaveValue(/INFORME DE ESCANEO · ROVIK\.IA/);
+    await expect(page.locator("#contacto")).toContainText("Hemos añadido tu informe de ROVIK.IA");
     await page.getByRole("button", { name: /Repetir escaneo/ }).click();
     await expect(page.getByRole("button", { name: "Iniciar escaneo" })).toBeVisible();
   });
@@ -279,6 +283,70 @@ test.describe("Recorridos de conversión", () => {
     await page.keyboard.press("Escape");
     await expect(panel).toBeHidden();
     await expect(page.getByRole("button", { name: "Abrir menú" })).toBeFocused();
+  });
+});
+
+test.describe("Página de campaña: construcción", () => {
+  test("la calculadora estima la fuga y la pasa al formulario", async ({ page }) => {
+    await page.goto("/constructoras/#calculadora");
+    await page.getByRole("spinbutton", { name: /Operarios en obra/ }).fill("20");
+    await page.getByRole("spinbutton", { name: /Horas sin parte firmado/ }).fill("3");
+    await page.getByRole("spinbutton", { name: /Precio de facturación/ }).fill("30");
+    const calc = page.locator("#calculadora");
+    await expect(calc).toContainText("260 h");
+    await expect(calc).toContainText(/7800\s€/);
+    await expect(calc).toContainText(/93\.600\s€/);
+    await calc.getByRole("button", { name: /Quiero medirlo con mis partes/ }).click();
+    await expect(page.locator("#f-mensaje")).toHaveValue(/20 operarios, 3 h\/semana/);
+  });
+
+  test("valores absurdos se acotan sin romper el cálculo", async ({ page }) => {
+    await page.goto("/constructoras/#calculadora");
+    const workers = page.getByRole("spinbutton", { name: /Operarios en obra/ });
+    await workers.fill("-40");
+    await workers.blur();
+    await expect(workers).toHaveValue("1");
+    await expect(page.locator("#calculadora")).not.toContainText("NaN");
+  });
+
+  test("cabecera mínima: sin menú que saque al visitante", async ({ page }) => {
+    await page.goto("/constructoras/");
+    await expect(page.getByRole("button", { name: "Abrir menú" })).toHaveCount(0);
+    await expect(page.locator('nav[aria-label="Principal"]')).toHaveCount(0);
+    await expect(page.locator("header").getByRole("link", { name: "Diagnóstico" })).toHaveAttribute("href", "#contacto");
+  });
+
+  test("la home enlaza a la página de construcción", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByRole("link", { name: /Ver solución para obra/ })).toHaveAttribute("href", "/constructoras/");
+  });
+});
+
+test.describe("Conversión en móvil", () => {
+  test("barra de contacto fija tras la portada, oculta al llegar al formulario", async ({ page }, info) => {
+    test.skip(!info.project.name.startsWith("movil"), "solo móvil");
+    for (const path of ["/", "/constructoras/"]) {
+      await page.goto(path);
+      const bar = page.locator("[data-cta-bar]");
+      await expect(bar).toHaveAttribute("aria-hidden", "true");
+      await page.evaluate(() => window.scrollTo({ top: window.innerHeight * 1.5, behavior: "instant" }));
+      await expect(bar).toHaveAttribute("aria-hidden", "false");
+      await page.locator("#contacto").scrollIntoViewIfNeeded();
+      await expect(bar).toHaveAttribute("aria-hidden", "true");
+    }
+  });
+
+  test("sin medición configurada: ni aviso de cookies ni peticiones a terceros", async ({ page }) => {
+    const external: string[] = [];
+    page.on("request", (r) => {
+      const u = new URL(r.url());
+      if (!["localhost", "127.0.0.1"].includes(u.hostname) && u.protocol.startsWith("http")) external.push(r.url());
+    });
+    for (const path of ["/", "/constructoras/"]) {
+      await page.goto(path, { waitUntil: "networkidle" });
+      await expect(page.getByRole("region", { name: "Aviso de cookies" })).toHaveCount(0);
+    }
+    expect(external).toEqual([]);
   });
 });
 

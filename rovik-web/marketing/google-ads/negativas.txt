@@ -1,0 +1,33 @@
+# Palabras clave negativas (nivel campaña, concordancia de frase)
+gratis
+gratuito
+gratuita
+free
+apk
+descargar
+plantilla
+excel
+pdf
+word
+modelo
+ejemplo
+formato
+imprimir
+cómo rellenar
+que es
+qué es
+definición
+curso
+máster
+oposiciones
+tfg
+empleo
+oferta de trabajo
+sueldo
+convenio
+infojobs
+indeed
+fichaje
+fichar
+registro horario
+registro de jornada

@@ -6,6 +6,8 @@ import Arrow from "@/components/ui/Arrow";
 import { CoreMark } from "@/components/ui/Logo";
 import { QUESTIONS, SYSTEMS, buildReport, reportAsText, scoreSystems, type Answers, type Report } from "@/lib/diagnosis";
 import { mailto } from "@/lib/site";
+import { track } from "@/lib/analytics";
+import { prefillContact } from "@/lib/prefill";
 
 interface Message {
   id: number;
@@ -176,6 +178,7 @@ export default function Assistant() {
             () => {
               const r = buildReport(next);
               setReport(r);
+              track("scan_complete", { indice: r.overall, modulo: r.module });
               push("ai", `Informe listo. Tu índice de escalabilidad es ${r.overall} sobre 100. Te recomiendo empezar por el módulo ${r.moduleName}.`);
             },
             reduce ? 50 : 1100
@@ -420,14 +423,25 @@ export default function Assistant() {
                     ))}
                   </ol>
                   <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                    <a href={mailto("Informe de escaneo ROVIK.IA", reportText + "\n\nMe gustaría comentarlo en una sesión de diagnóstico.")} className="btn btn-primary">
-                      Enviar informe a Rovik
+                    <button
+                      type="button"
+                      onClick={() => prefillContact({ mensaje: reportText + "\n\nMe gustaría revisar este informe en una sesión de diagnóstico.", origen: "informe de ROVIK.IA" })}
+                      className="btn btn-primary"
+                    >
+                      Revisar mi informe con Rovik
                       <Arrow />
-                    </a>
+                    </button>
                     <button type="button" onClick={copy} className="btn btn-ghost">
                       {copied ? "Copiado" : "Copiar informe"}
                     </button>
                   </div>
+                  <p className="mt-4 text-sm text-fg-2">
+                    O envíalo tal cual{" "}
+                    <a href={mailto("Informe de escaneo ROVIK.IA", reportText + "\n\nMe gustaría comentarlo en una sesión de diagnóstico.")} className="link-hud">
+                      por correo
+                    </a>
+                    .
+                  </p>
                   <p className="mt-5 text-xs text-muted">
                     Orientativo: es un análisis automático de tus respuestas y no sustituye al diagnóstico con una persona.
                   </p>

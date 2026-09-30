@@ -1,10 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import Logo from "@/components/ui/Logo";
 import { NAV, asset } from "@/lib/site";
 
 export default function Header() {
+  // En la página de campaña la cabecera es mínima: sin menú que distraiga del objetivo
+  const landing = (usePathname() ?? "").includes("constructoras");
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -68,6 +71,9 @@ export default function Header() {
           <Logo />
         </a>
 
+        {landing ? (
+          <p className="hud-label hidden text-muted md:block">Construcción · Obra · Subcontratas</p>
+        ) : (
         <nav aria-label="Principal" className="hidden lg:block">
           <ul className="flex items-center gap-8">
             {NAV.map((item) => (
@@ -80,15 +86,20 @@ export default function Header() {
             ))}
           </ul>
         </nav>
+        )}
 
         <div className="flex items-center gap-3">
           <p className="hud-label hidden items-center gap-2 text-muted xl:flex" aria-hidden="true">
             <span className="h-1.5 w-1.5 rounded-full bg-ok blink" />
             Sistema en línea
           </p>
-          <a href={`${home}#contacto`} className="btn btn-primary hidden !min-h-[42px] !px-4 !text-[0.72rem] sm:inline-flex">
-            Solicitar diagnóstico
+          <a
+            href={landing ? "#contacto" : `${home}#contacto`}
+            className={`btn btn-primary !min-h-[42px] !px-4 !text-[0.72rem] ${landing ? "inline-flex" : "hidden sm:inline-flex"}`}
+          >
+            {landing ? "Diagnóstico" : "Solicitar diagnóstico"}
           </a>
+          {!landing && (
           <button
             ref={buttonRef}
             type="button"
@@ -103,6 +114,7 @@ export default function Header() {
               <span className={`absolute bottom-0 left-0 h-[2px] bg-fg transition-all duration-300 ${open ? "w-6 -translate-y-[5px] -rotate-45" : "w-4"}`} />
             </span>
           </button>
+          )}
         </div>
       </div>
 

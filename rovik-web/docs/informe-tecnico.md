@@ -108,3 +108,42 @@ en texto pequeño (rojo específico para texto: `--red-text`).
 | `lib/content.ts` | Compromisos publicados: sesión de diagnóstico de 30 min por videollamada, propuesta por escrito con precio y métrica, «todo queda a tu nombre» |
 | `lib/content.ts` → casos | Dos casos son propuestas/prototipos para empresas que no son clientes: van anonimizados y etiquetados como tales |
 | Imágenes | Sustituir capturas por resultados reales en cuanto haya clientes que lo autoricen |
+
+
+---
+
+# Versión 2 · Preparada para campañas (30-09-2026)
+
+## Qué cambia
+
+| Área | Cambio |
+| --- | --- |
+| Captación | Formulario con envío directo (Formspree, Web3Forms o endpoint https propio) y respaldo por correo si falla; teléfono opcional; campo trampa y tiempo mínimo contra robots; adjunta `utm_*`, `gclid`, `gbraid`, `wbraid` y `fbclid` de la URL (sin guardar nada en el dispositivo) |
+| Medición | GA4, Google Ads (conversión al confirmar el envío) y píxel de Meta; **nada se carga antes del consentimiento**; los eventos no llevan datos personales |
+| Consentimiento | Aviso accesible con Rechazar y Aceptar del mismo tamaño; elección recordada 12 meses; «Preferencias de cookies» en el pie para retirarlo |
+| Legal | Las políticas de cookies y privacidad se generan según las integraciones activas (tabla de cookies, encargado del tratamiento, transferencias) |
+| Conversión | Página `/constructoras/` (cabecera sin menú, calculadora de fugas, 3 fugas → 3 soluciones, pruebas reales, piloto, FAQ de obra); escáner ROVIK.IA → formulario prerrellenado; barra de contacto fija en móvil |
+| SEO | `/constructoras/` en el mapa del sitio con JSON-LD `Service` + `FAQPage` |
+| Kit Ads | `marketing/google-ads/`: 16 palabras clave en 3 grupos, 32 negativas y anuncio adaptable con 15 títulos y 4 descripciones |
+
+## Seguridad de la v2
+
+- **CSP generada según la configuración**: sin integraciones, idéntica a la v1; con ellas, `script-src`, `connect-src`,
+  `img-src` y `frame-src` se amplían **solo** con los dominios de lo activado (probado).
+- La configuración se valida: formatos de ID, endpoints solo `https` y sin credenciales, proveedores conocidos. Lo inválido se
+  ignora con aviso al compilar.
+- El envío tiene un tiempo máximo (12 s), no lanza errores y nunca inserta HTML. `JSON.stringify` en el cuerpo y respuesta
+  verificada (`success` en Web3Forms).
+- La clave de Web3Forms es pública por diseño (identifica el formulario, no da acceso a datos). Ninguna clave privada va al navegador.
+- `npm audit`: 0 vulnerabilidades.
+
+## Verificación de la v2
+
+| Comprobación | Resultado |
+| --- | --- |
+| ESLint y TypeScript | 0 errores |
+| Unitarias (integraciones, CSP, envío, atribución, calculadora, límites de Google Ads) | **13 superadas** |
+| E2E por defecto (5 tamaños, 5 páginas, axe incluido) | **177 superadas**, 0 fallidas |
+| E2E con formulario y medición activados (`npm run test:ads`, móvil y escritorio) | **18 superadas**: sin terceros antes de aceptar · rechazar no carga nada y se recuerda · aceptar carga Google y Meta · envío con UTM y gclid · conversión sin datos personales · fallo del servicio → correo · campo trampa · CSP exacta · política de cookies · aviso accesible |
+| Lighthouse `/constructoras/` | Móvil **93** · Escritorio **100** · Accesibilidad, buenas prácticas y SEO **100** |
+| Lighthouse home | Móvil **95** · Accesibilidad, buenas prácticas y SEO **100** |

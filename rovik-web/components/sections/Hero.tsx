@@ -94,7 +94,12 @@ export default function Hero() {
 
       <div className="shell relative z-10 pb-8 lg:pb-10">
         <div className="flex flex-col gap-5 border-t border-line pt-6 md:flex-row md:items-center md:justify-between">
-          <p className="max-w-2xl text-pretty text-[0.95rem] text-fg-2">{HERO.audience}</p>
+          <p className="max-w-2xl text-pretty text-[0.95rem] text-fg-2">
+            {HERO.audience}{" "}
+            <a href={asset("/constructoras/")} className="link-hud whitespace-nowrap">
+              ¿Construcción? Ver solución para obra →
+            </a>
+          </p>
           <a href="#fugas" className="hud-label group flex min-h-11 shrink-0 items-center gap-3 text-muted transition-colors hover:text-fg">
             <span className="relative block h-8 w-px overflow-hidden bg-line-2" aria-hidden="true">
               <span className="absolute inset-x-0 top-0 h-3 bg-red-hi motion-safe:animate-[drop_1.8s_ease-in-out_infinite]" />

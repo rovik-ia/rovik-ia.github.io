@@ -16,6 +16,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { SECURITY_HEADERS } from "./security-headers.mjs";
+import { cspSources, envFromProcess, readIntegrations } from "./integrations.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const out = path.join(root, "out");
@@ -38,20 +39,27 @@ function hashes(html) {
   return [...set].sort();
 }
 
+// Integraciones activas (formulario con servicio, medición): amplían la CSP solo con sus dominios
+const siteConfig = JSON.parse(fs.readFileSync(path.join(root, "site.config.json"), "utf8"));
+const integrations = readIntegrations(siteConfig, envFromProcess());
+integrations.warnings.forEach((w) => console.warn("Aviso de configuración:", w));
+const extra = cspSources(integrations);
+const list = (items) => (items.length ? " " + items.join(" ") : "");
+
 function policy(h) {
   return [
     "default-src 'self'",
-    `script-src 'self' ${h.join(" ")}`.trim(),
+    `script-src 'self' ${h.join(" ")}${list(extra.script)}`,
     "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data: blob:",
+    `img-src 'self' data: blob:${list(extra.img)}`,
     "font-src 'self'",
-    "connect-src 'self'",
+    `connect-src 'self'${list(extra.connect)}`,
     "media-src 'self'",
     "worker-src 'none'",
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
-    "frame-src 'none'",
+    extra.frame.length ? `frame-src${list(extra.frame)}` : "frame-src 'none'",
     "manifest-src 'self'",
     "upgrade-insecure-requests",
   ].join("; ");
@@ -88,7 +96,7 @@ const headerLines = ["/*", ...Object.entries(SECURITY_HEADERS).map(([k, v]) => `
 fs.writeFileSync(path.join(out, "_headers"), headerLines.join("\n"));
 fs.writeFileSync(path.join(out, ".nojekyll"), "");
 
-const config = JSON.parse(fs.readFileSync(path.join(root, "site.config.json"), "utf8"));
+const config = siteConfig;
 
 // security.txt (RFC 9116) con la URL canónica de la configuración
 const siteUrl = config.url.replace(/\/$/, "");
@@ -106,4 +114,5 @@ if (host && !host.endsWith("github.io") && !process.env.BASE_PATH) {
   state = `CNAME -> ${host}`;
 } else if (fs.existsSync(cname)) fs.rmSync(cname);
 
-console.log(`CSP aplicada a ${pages} páginas, ${total} scripts en línea autorizados por huella · ${state}`);
+const active = [integrations.form.enabled && `formulario (${integrations.form.provider})`, integrations.tracking.ga4 && "GA4", integrations.tracking.googleAds && "Google Ads", integrations.tracking.metaPixel && "Meta"].filter(Boolean);
+console.log(`CSP aplicada a ${pages} páginas, ${total} scripts en línea autorizados por huella · ${state} · integraciones: ${active.join(", ") || "ninguna"}`);

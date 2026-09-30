@@ -8,7 +8,9 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "render": "node scripts/render/render.mjs",
-    "test": "playwright test"
+    "test": "playwright test",
+    "test:unit": "playwright test --project=unit",
+    "test:ads": "node scripts/qa/test-ads.mjs"
   },
   "dependencies": {
     "next": "16.3.8",

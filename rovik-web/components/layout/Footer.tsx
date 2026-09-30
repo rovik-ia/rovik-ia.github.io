@@ -1,5 +1,7 @@
 import Logo from "@/components/ui/Logo";
 import { NAV, SITE, asset } from "@/lib/site";
+import { INTEGRATIONS } from "@/lib/integrations";
+import CookiePrefsButton from "@/components/consent/CookiePrefsButton";
 
 export default function Footer() {
   const year = 2026;
@@ -51,13 +53,18 @@ export default function Footer() {
                 Cookies
               </a>
             </li>
+            {INTEGRATIONS.tracking.enabled && (
+              <li>
+                <CookiePrefsButton className="inline-block min-h-11 py-1.5 text-left text-fg-2 transition-colors hover:text-fg" />
+              </li>
+            )}
           </ul>
         </nav>
       </div>
       <div className="border-t border-line">
         <div className="shell flex flex-col gap-2 py-6 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
           <p>© {year} Rovik. Todos los derechos reservados.</p>
-          <p className="hud-label">Sin cookies · Sin rastreadores</p>
+          <p className="hud-label">{INTEGRATIONS.tracking.enabled ? "Cookies solo con tu permiso" : "Sin cookies · Sin rastreadores"}</p>
         </div>
       </div>
       {/* Rótulo decorativo: SVG para que no cuente como texto (ni para lectores ni para contraste) */}
