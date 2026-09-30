@@ -1,9 +1,14 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import type { FlatProduct } from "@/lib/products";
 import BuyButton from "./BuyButton";
+
+// La categoría del enlace (?cat=) solo existe en el navegador: en el HTML
+// estático se renderiza "Todo" y al hidratar se aplica la de la URL.
+const sinSuscripcion = () => () => {};
+const leerCatDeUrl = () => new URLSearchParams(window.location.search).get("cat") ?? "";
 
 export default function ProductFinder({
   productos,
@@ -13,12 +18,10 @@ export default function ProductFinder({
   categorias: { slug: string; name: string }[];
 }) {
   const [texto, setTexto] = useState("");
-  const [cat, setCat] = useState("");
-
-  useEffect(() => {
-    const inicial = new URLSearchParams(window.location.search).get("cat");
-    if (inicial && categorias.some((c) => c.slug === inicial)) setCat(inicial);
-  }, [categorias]);
+  // null mientras el usuario no elija: manda la categoría del enlace.
+  const [catElegida, setCat] = useState<string | null>(null);
+  const catEnlace = useSyncExternalStore(sinSuscripcion, leerCatDeUrl, () => "");
+  const cat = catElegida ?? (categorias.some((c) => c.slug === catEnlace) ? catEnlace : "");
 
   const filtrados = useMemo(() => {
     const q = texto
