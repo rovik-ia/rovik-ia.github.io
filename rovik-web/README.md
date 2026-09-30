@@ -19,6 +19,7 @@ npm run typecheck    # TypeScript
 npm run build        # exporta a out/ y endurece (CSP por huella, cabeceras, security.txt)
 npm test             # Playwright + axe en 375, 390, 768, 1024 y 1440 px (sirve out/)
 node scripts/serve.mjs 4173   # servir out/ en local (HEADERS=1 añade las cabeceras de seguridad)
+node scripts/preview/build-preview.mjs /ruta   # vista previa que funciona servida desde cualquier subruta
 ```
 
 Renders e imágenes:
