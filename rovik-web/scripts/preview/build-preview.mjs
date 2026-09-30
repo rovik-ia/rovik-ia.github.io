@@ -32,8 +32,8 @@ for (const f of fs.readdirSync(path.join(dest, "_next/static/chunks"))) {
   }
 }
 
-const PAGES = { "index.html": 0, "aviso-legal/index.html": 1, "privacidad/index.html": 1, "cookies/index.html": 1 };
-const LEGAL = ["aviso-legal", "privacidad", "cookies"];
+const PAGES = { "index.html": 0, "constructoras/index.html": 1, "aviso-legal/index.html": 1, "privacidad/index.html": 1, "cookies/index.html": 1 };
+const LEGAL = ["constructoras", "aviso-legal", "privacidad", "cookies"];
 
 for (const [rel, depth] of Object.entries(PAGES)) {
   const file = path.join(dest, rel);
@@ -82,6 +82,7 @@ a.o:not(.p) small{color:var(--muted)}
   <h1>Ponle <span>armadura</span> a tu empresa.</h1>
   <div class="opts">
     <a class="o p" href="site/index.html"><b>Ver la web →</b><small>Se adapta a tu pantalla: móvil en el móvil, escritorio en el ordenador.</small></a>
+    <a class="o" href="site/constructoras/index.html"><b>Página de campaña: construcción</b><small>La landing para anuncios de Google: calculadora de fugas de horas y formulario.</small></a>
     <a class="o" href="escritorio.html"><b>Ver versión PC en este dispositivo</b><small>La web a 1440 px (tamaño de ordenador), escalada a tu pantalla. En el móvil, mejor en horizontal.</small></a>
   </div>
 </main>
