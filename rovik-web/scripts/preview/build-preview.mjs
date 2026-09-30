@@ -58,15 +58,62 @@ for (const [rel, depth] of Object.entries(PAGES)) {
   fs.writeFileSync(file, html);
 }
 
-// Página que abre la vista previa (el anfitrión envuelve este fragmento en su propio documento)
+// Portada de la vista previa (el anfitrión envuelve este fragmento en su propio documento)
 fs.writeFileSync(
   path.join(out, "portada.html"),
   `<title>Rovik Web</title>
-<style>:root{color-scheme:dark}body{background:#07080a;color:#eef0f3;font:16px/1.6 system-ui,sans-serif;margin:0}
-main{min-height:100vh;display:grid;place-items:center;padding-inline:16px;text-align:center}a{color:#7fe7ff}</style>
-<main><p>Abriendo la vista previa de Rovik… <a id="ir" href="site/index.html">Abrir la web</a></p></main>
-<script>location.replace(new URL("site/index.html", location.href).href);</script>
+<style>
+:root{color-scheme:dark;--bg:#07080a;--fg:#eef0f3;--muted:#98a0ac;--red:#c8102e;--line:#2a303a;--cyan:#7fe7ff}
+body{background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;margin:0}
+main{min-height:100vh;box-sizing:border-box;display:grid;place-content:center;gap:28px;padding-block:40px;padding-inline:16px;max-width:34rem;margin:0 auto}
+p.k{font:500 12px/1.4 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0}
+h1{font-size:clamp(2rem,7vw,2.8rem);line-height:1;margin:0;letter-spacing:-.01em;text-transform:uppercase}
+h1 span{color:#ff5a6a}
+.opts{display:grid;gap:12px}
+a.o{display:block;text-decoration:none;color:var(--fg);border:1px solid var(--line);padding:18px 20px}
+a.o:hover,a.o:focus-visible{border-color:var(--cyan);outline:none}
+a.o.p{background:var(--red);border-color:var(--red)}
+a.o b{display:block;font:700 13px/1.4 ui-monospace,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase}
+a.o small{display:block;margin-top:4px;color:#d6dae0;font-size:14px}
+a.o:not(.p) small{color:var(--muted)}
+</style>
+<main>
+  <p class="k">Vista previa privada · Rovik</p>
+  <h1>Ponle <span>armadura</span> a tu empresa.</h1>
+  <div class="opts">
+    <a class="o p" href="site/index.html"><b>Ver la web →</b><small>Se adapta a tu pantalla: móvil en el móvil, escritorio en el ordenador.</small></a>
+    <a class="o" href="escritorio.html"><b>Ver versión PC en este dispositivo</b><small>La web a 1440 px (tamaño de ordenador), escalada a tu pantalla. En el móvil, mejor en horizontal.</small></a>
+  </div>
+</main>
 `
 );
+
+// Vista de escritorio: la web a 1440 px dentro de un marco escalado al ancho disponible
+fs.writeFileSync(
+  path.join(out, "escritorio.html"),
+  `<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Rovik · versión PC</title>
+<style>
+html,body{margin:0;height:100%;background:#07080a;color:#eef0f3;font:14px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif}
+.bar{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;justify-content:space-between;padding:8px 16px;border-bottom:1px solid #1d2129}
+.bar p{margin:0;font:500 11px/1.4 ui-monospace,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase;color:#98a0ac}
+.bar a{color:#7fe7ff}
+.stage{position:relative;overflow:hidden}
+iframe{position:absolute;left:0;top:0;width:1440px;border:0;transform-origin:0 0;background:#07080a}
+</style></head>
+<body>
+<div class="bar" id="bar"><p>Versión PC · 1440 px · escala <span id="z"></span></p><a href="site/index.html">Ver versión adaptable</a></div>
+<div class="stage" id="stage"><iframe id="f" src="site/index.html" title="Web de Rovik a tamaño de ordenador"></iframe></div>
+<script>
+var f=document.getElementById("f"),st=document.getElementById("stage"),bar=document.getElementById("bar"),z=document.getElementById("z");
+function fit(){var s=Math.min(1,window.innerWidth/1440),avail=window.innerHeight-bar.offsetHeight,h=Math.max(400,avail/s);
+f.style.transform="scale("+s+")";f.style.height=h+"px";st.style.height=avail+"px";z.textContent=Math.round(s*100)+" %";}
+window.addEventListener("resize",fit);fit();
+</script>
+</body></html>
+`
+);
+
 const n = fs.readdirSync(out, { recursive: true }).length;
 console.log(`Vista previa en ${out} (${n} entradas)`);
