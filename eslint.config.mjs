@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Proyecto independiente (web de Rovik) con su propia configuración
+    "rovik-web/**",
   ]),
 ]);
 
